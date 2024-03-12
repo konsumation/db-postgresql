@@ -30,7 +30,7 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: node tests/fixtures/client.js
+      - run: node tests/fixtures/client.mjs
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
