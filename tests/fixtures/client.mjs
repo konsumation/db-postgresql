@@ -1,6 +1,6 @@
-import { Client } from 'pg';
+import pg from 'pg';
 
-const pgclient = new Client({
+const pgclient = new pg.Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
     user: 'postgres',
