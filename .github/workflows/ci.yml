@@ -31,7 +31,7 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci
       - run: node tests/fixtures/client.js
-      - env:
+        env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
       - run: npm run cover --if-present
