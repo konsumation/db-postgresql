@@ -5,6 +5,7 @@ bun.lockb
 *.dump
 .DS_Store
 *.node
+types
 .test
 dist
 .tmp
