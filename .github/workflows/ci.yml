@@ -8,9 +8,15 @@ on:
     branches:
       - master
       - next
+permissions:
+  contents: read
 jobs:
   test-node:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 20.11.1
     services:
       postgres:
         image: postgres:16
@@ -18,12 +24,13 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: ci_db_test
-          POSTGRES_HOST_AUTH_METHOD: 'md5'
+          POSTGRES_HOST_AUTH_METHOD: md5
         ports:
           - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s
+          --health-retries 5
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.2
       - uses: actions/setup-node@v4.0.2
         with:
           node-version: ${{ matrix.node-version }}
@@ -35,6 +42,33 @@ jobs:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
       - run: npm run cover --if-present
-
-permissions:
-  contents: read
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-${{ matrix.test_number }}
+          path-to-lcov: build/coverage/lcov.info
+          parallel: true
+        continue-on-error: true
+  release:
+    needs:
+      - test-node
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4.1.2
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 20.11.1
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx semantic-release
+        env:
+          CI: "true"
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

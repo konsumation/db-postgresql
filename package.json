@@ -1,6 +1,5 @@
 {
   "name": "konsum-db-postgresql",
-  "description" : "konsum db in postgres",
   "version": "0.0.0-semantic-release",
   "publishConfig": {
     "access": "public"
@@ -12,6 +11,7 @@
       "types": "./types/master.d.mts"
     }
   },
+  "description": "konsum db in postgres",
   "contributors": [
     {
       "name": "Markus Felten",
@@ -42,6 +42,14 @@
     "semantic-release": "^23.0.2",
     "typescript": "^5.4.2"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/konsumation/konsum-db-postgresql.git"
+  },
+  "bugs": {
+    "url": "https://github.com/konsumation/konsum-db-postgresql/issues"
+  },
+  "homepage": "https://github.com/konsumation/konsum-db-postgresql#readme",
   "template": {
     "inheritFrom": [
       "arlac77/template-github-action",
