@@ -7,7 +7,7 @@ COMMENT ON COLUMN category.unit IS 'physical unit like kWh or m3';
 COMMENT ON COLUMN category.fractionaldigits IS 'display precission';
 
 CREATE TABLE meter (
-    id SERIAL, name VARCHAR(30) not null PRIMARY KEY, category VARCHAR(30) not null, description VARCHAR(80), unit VARCHAR(10), fractionalDigits INT
+    id SERIAL, name VARCHAR(30) not null PRIMARY KEY, category VARCHAR(30) not null REFERENCES category(name), description VARCHAR(80), unit VARCHAR(10), fractionalDigits INT
 );
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
