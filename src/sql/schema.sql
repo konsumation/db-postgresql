@@ -1,13 +1,12 @@
 create table
     category (
         id SERIAL,
-        name VARCHAR(30) not null,
+        name VARCHAR(30) not null UNIQUE,
         description VARCHAR(80)
     );
 
 ALTER TABLE category ADD CONSTRAINT category_pk PRIMARY KEY (id, name);
 
--- FOREIGN key on category name and id columns instead of two different
 CREATE TABLE
     meter (
         id SERIAL PRIMARY KEY,
