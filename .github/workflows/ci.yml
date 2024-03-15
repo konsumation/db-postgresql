@@ -39,6 +39,9 @@ jobs:
       - run: npm ci
       - run: node tests/fixtures/client.mjs
         env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ci_db_test
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
       - run: npm run cover --if-present
