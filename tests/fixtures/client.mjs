@@ -1,6 +1,6 @@
 import pg from 'pg';
 
-
+console.log(process.env.PGPASSWORD,process.env.POSTGRES_PASSWORD)
 const pgclient = new pg.Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
