@@ -22,7 +22,7 @@ jobs:
         image: postgres:16
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
           POSTGRES_DB: ci_db_test
           POSTGRES_HOST_AUTH_METHOD: md5
         ports:
@@ -41,7 +41,7 @@ jobs:
       - run: bin/createDBschema.sh
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
           POSTGRES_DB: ci_db_test
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
