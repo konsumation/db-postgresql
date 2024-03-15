@@ -13,6 +13,12 @@ permissions:
 jobs:
   test-node:
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: postgres
+      PGPASSWORD: postgres
+      POSTGRES_DB: ci_db_test
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
     strategy:
       matrix:
         node-version:
@@ -30,12 +36,6 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s
           --health-retries 5
     steps:
-    env:
-      POSTGRES_USER: postgres
-      PGPASSWORD: postgres
-      POSTGRES_DB: ci_db_test
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: 5432
       - uses: actions/checkout@v4.1.2
       - uses: actions/setup-node@v4.0.2
         with:
