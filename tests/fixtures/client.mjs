@@ -6,7 +6,7 @@ const pgclient = new pg.Client({
     port: process.env.POSTGRES_PORT,
     user: process.env.POSTGRES_USER,
     // use env variable PGPASSWORD
-    //password: process.env.POSTGRES_PASSWORD,
+    password: process.env.PGPASSWORD,
     database: process.env.POSTGRES_DB
 });
 
