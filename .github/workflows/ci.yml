@@ -38,6 +38,7 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci
       - run: node tests/fixtures/client.mjs
+      - run: bin/createDBschema.sh
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
