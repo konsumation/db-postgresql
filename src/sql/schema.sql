@@ -2,7 +2,8 @@ create table
     category (
         id SERIAL,
         name VARCHAR(30) not null UNIQUE,
-        description VARCHAR(80)
+        description VARCHAR(80),
+        created timestamp not null default current_timestamp
     );
 
 ALTER TABLE category ADD CONSTRAINT category_pk PRIMARY KEY (id, name);
@@ -30,3 +31,12 @@ values
         meter int not NULL REFERENCES meter (id),
         date timestamp not null
     );
+
+create table
+    version (
+        appversion varchar(50) not null,
+        migrated timestamp not null default current_timestamp
+    );
+
+insert into version (appversion) values (:'version') RETURNING *;
+commit;

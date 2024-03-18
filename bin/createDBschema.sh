@@ -19,4 +19,6 @@ if [ ! -r "${DEPLOYSQL}" ]; then
     exit 1
 fi
 
-psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -a -f $DEPLOYSQL -v ON_ERROR_STOP=1
+#-v version=${VERSION:-'1.0.0'}
+#export VERSION={VERSION:-'1.0.0'}
+psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -a -f $DEPLOYSQL -v ON_ERROR_STOP=1 -v version=${VERSION:-'1.0.0'}
