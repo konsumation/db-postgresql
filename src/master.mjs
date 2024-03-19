@@ -21,16 +21,15 @@ export class Postgres {
 
   static async initialize(db) {
     let meta;
-
     /**
      * get meta info like schema version
      */
-    await db.connect();
+    //await db.connect();
 
     const answer = await db.query(
       "SELECT appversion FROM version order by migrated"
     );
-    console.log(answer.rows[0].appversion);
+    //console.log(answer.rows[0].appversion);
     meta = {
       schemaVersion: answer.rows[0].appversion
     };
@@ -38,7 +37,7 @@ export class Postgres {
 
     const master = new Postgres("unnamed", undefined, meta);
     master.db = db;
-    await db.end();
+
     return master;
   }
 
@@ -47,13 +46,13 @@ export class Postgres {
    * List Categories.
    */
     async categories() {
-      await this.db.connect();
+      //await this.db.connect();
       const answer = await this.db.query(
-        "SELECT name from category;"
+        "SELECT name from category"
       );
-      console.log(answer.rows);
-      await this.db.end();
-      return answer
+      //console.log(answer.rows);
+      //await this.db.end();
+      return answer.rows
     }
 
 }
