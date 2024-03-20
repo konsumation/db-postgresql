@@ -13,11 +13,12 @@ CREATE TABLE
         id SERIAL PRIMARY KEY,
         meterserial varchar(100),
         categoryid int not null,
-        category VARCHAR(30) not null,
+        categoryname VARCHAR(30) not null,
         description VARCHAR(80),
         unit VARCHAR(10),
         fractionalDigits INT,
-        Foreign Key (categoryid, category) REFERENCES category (id, name)
+        validfrom date,
+        Foreign Key (categoryid, categoryname) REFERENCES category (id, name)
     );
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
