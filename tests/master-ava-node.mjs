@@ -1,16 +1,11 @@
 import test from "ava";
-import pg from "pg";
 import { Postgres } from "@konsumation/konsum-db-postgresql";
+import { prepareDBSchemaFor } from "../src/util.mjs"
 
-const db = new pg.Pool({
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  user: process.env.POSTGRES_USER,
-  //password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
-});
+const db = await prepareDBSchemaFor("master");
 
-test.only("initialize", async t => {
+test("initialize", async t => {
+
   //const db = new pg.Client({})
   //await db.connect();
   const master = await Postgres.initialize(db);
