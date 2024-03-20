@@ -29,7 +29,7 @@ export async function prepareDBSchemaFor(name) {
   
     const DEPLOYSQL = new URL("sql/schema.sql", import.meta.url).pathname
   
-    await execaCommand(`psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d master -a -f ${DEPLOYSQL} -v ON_ERROR_STOP=1 -v version=1.0.0`)
+    await execaCommand(`psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${name} -a -f ${DEPLOYSQL} -v ON_ERROR_STOP=1 -v version=1.0.0`)
   
     return db
   }
