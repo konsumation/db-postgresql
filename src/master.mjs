@@ -1,3 +1,10 @@
+import { Category } from "./category.mjs";
+import { Meter } from "./meter.mjs";
+
+export {
+  Category,
+  Meter,
+};
 
 function checkVersion(version) {
   if (version !== "1.0.0") {
@@ -42,17 +49,32 @@ export class Postgres {
   }
 
 
-    /**
-   * List Categories.
-   */
-    async categories() {
-      //await this.db.connect();
-      const answer = await this.db.query(
-        "SELECT name from category"
-      );
+  /**
+ * List Categories.
+ */
+  async categories() {
+    //await this.db.connect();
+    const answer = await this.db.query(
+      "SELECT name from category"
+    );
       //console.log(answer.rows);
       //await this.db.end();
       return answer.rows
+  }
+
+/**
+  async *categories() {
+    import Cursor from 'pg-cursor'
+
+    const sql = "SELECT name from category";
+
+   this.db.query(new Cursor(sql))
+
+    for await (const row of query) {
+      yield row;
     }
+
+  }
+ */
 
 }
