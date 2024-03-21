@@ -1,6 +1,6 @@
 import { Category } from "./category.mjs";
 import { Meter } from "./meter.mjs";
-
+import QueryStream from "pg-query-stream";
 export {
   Category,
   Meter,
@@ -51,30 +51,34 @@ export class Postgres {
 
   /**
  * List Categories.
- */
-  async categories() {
+
+  async *categories() {
     //await this.db.connect();
-    const answer = await this.db.query(
+    const result = await this.db.query(
       "SELECT name from category"
     );
-      //console.log(answer.rows);
-      //await this.db.end();
-      return answer.rows
-  }
-
-/**
-  async *categories() {
-    import Cursor from 'pg-cursor'
-
-    const sql = "SELECT name from category";
-
-   this.db.query(new Cursor(sql))
-
-    for await (const row of query) {
-      yield row;
+    //console.log(answer.rows);
+    //await this.db.end();
+    console.log("result:", result.rows)
+    for (const row of result.rows) {
+      yield row; // Ergebnisse zeilenweise als Generator zurückgeben
     }
-
+    //return answer.rows
   }
  */
+
+  
+  async *categories() {
+    const sql = "SELECT name from category";
+
+    const stream = new QueryStream(sql, [])
+    this.db.query(stream)
+
+    for await (const row of stream) {
+      console.log("xxxxx", row)
+      yield row;
+    }
+  }
+
 
 }

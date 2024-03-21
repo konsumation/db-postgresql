@@ -18,9 +18,10 @@ test.only("Category write / read / delete", async t => {
   const cs = [];
 
   for await (const c of master.categories()) {
-    console.log(c.name)
+    console.log('test', c.name)
     cs.push(c);
   }
+  console.log(cs)
 
   t.true(cs.length >= 10);
   //t.is(cs[0].unit, "kWh");
