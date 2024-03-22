@@ -2,7 +2,7 @@ import { Meter } from "./meter.mjs";
 //import { Note } from "./note.mjs";
 import { METER_ATTRIBUTES } from "./consts.mjs";
 import { description } from "./attributes.mjs";
-import {definePropertiesFromOptions} from "./attribute-extras.mjs"
+import { definePropertiesFromOptions } from "./attribute-extras.mjs"
 
 /**
  * Value Category.
@@ -39,10 +39,8 @@ export class Category {
     const text =
       "INSERT INTO category(name, description) VALUES($1, $2) RETURNING *";
     const values = [this.name, this.description];
-
-    db.query(text, values, (err, res) => {
-      if (err) throw err;
-    });
+    //TODO check result output from query and throw error if needed
+    return db.query(text, values);
   }
 
   async getActiveMeter(db) {
