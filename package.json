@@ -35,7 +35,8 @@
   "dependencies": {
     "@konsumation/model": "^1.0.3",
     "pacc": "^3.1.6",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "pg-query-stream": "^4.5.3"
   },
   "devDependencies": {
     "ava": "^6.1.2",
