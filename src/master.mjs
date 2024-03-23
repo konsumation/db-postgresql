@@ -1,3 +1,4 @@
+import { Master} from "@konsumation/model";
 import { Category } from "./category.mjs";
 import { Meter } from "./meter.mjs";
 import QueryStream from "pg-query-stream";
@@ -18,14 +19,10 @@ function checkVersion(version) {
  *
  * @property {string} schemaVersion
  */
-export class Postgres {
+export class Postgres extends Master {
 
-  static get attributes() {
-    return {
-      schemaVersion
-    };
-  }
-
+  db;
+  
   static async initialize(db) {
     let meta;
     /**
