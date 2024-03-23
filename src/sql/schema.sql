@@ -1,8 +1,8 @@
 CREATE TABLE category (
     id SERIAL,
-    name VARCHAR(30) not null UNIQUE,
+    name VARCHAR(30) NOT NULL UNIQUE,
     description VARCHAR(80),
-    created timestamp not null default current_timestamp
+    created timestamp NOT NULL DEFAULT current_timestamp
 );
 
 ALTER TABLE
@@ -12,14 +12,14 @@ ADD
 
 CREATE TABLE meter (
     id SERIAL PRIMARY KEY,
-    meterserial varchar(100),
-    categoryid int not null,
-    categoryname VARCHAR(30) not null,
+    meterserial VARCHAR(100),
+    categoryid INT NOT NULL,
+    categoryname VARCHAR(30) NOT NULL,
     description VARCHAR(80),
     unit VARCHAR(10),
     fractionalDigits INT,
-    validfrom date,
-    Foreign Key (categoryid, categoryname) REFERENCES category (id, name)
+    validfrom DATE,
+    FOREIGN KEY (categoryid, categoryname) REFERENCES category (id, name)
 );
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
@@ -29,14 +29,14 @@ COMMENT ON COLUMN meter.fractionaldigits IS 'display precission';
 CREATE TABLE
 values
     (
-        value decimal not null,
-        meter int not NULL REFERENCES meter (id),
-        date timestamp not null
+        value DECIMAL NOT NULL,
+        meter INT NOT NULL REFERENCES meter (id),
+        date TIMESTAMP NOT NULL
     );
 
 CREATE TABLE version (
-    appversion varchar(50) not null,
-    migrated timestamp not null default current_timestamp
+    appversion VARCHAR(50) NOT NULL,
+    migrated TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
 insert into
