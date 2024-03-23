@@ -12,11 +12,11 @@ check_vars()
 
 check_vars POSTGRES_PORT POSTGRES_HOST POSTGRES_USER PGPASSWORD POSTGRES_DB
 
-DEPLOYSQL="src/sql/recreateDB.sql"
+RECRATESQL="src/sql/recreateDB.sql"
 
-if [ ! -r "${DEPLOYSQL}" ]; then
-    echo "${DEPLOYSQL} does not exist or not readable"
+if [ ! -r "${RECRATESQL}" ]; then
+    echo "${RECRATESQL} does not exist or not readable"
     exit 1
 fi
 
-psql -h $POSTGRES_HOST -U $POSTGRES_USER -a -f $DEPLOYSQL -v name=$POSTGRES_DB
+psql -h $POSTGRES_HOST -U $POSTGRES_USER -a -f $RECRATESQL -v name=$POSTGRES_DB

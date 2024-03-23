@@ -35,12 +35,28 @@ export class Category {
     definePropertiesFromOptions(this, options);
   }
 
+  /**
+   * Add category record to database.
+   * @param {*} db 
+   * @returns 
+   */
   async write(db) {
     const text =
       "INSERT INTO category(name, description) VALUES($1, $2) RETURNING *";
     const values = [this.name, this.description];
     //TODO check result output from query and throw error if needed
     return db.query(text, values);
+  }
+
+  /**
+* Delete record from database.
+* @param {pg} db
+*/
+  async delete(db) {
+    const text =
+      `delete from category where name='${this.name}' RETURNING *`;
+    //TODO check result output from query and throw error if needed
+    return db.query(text);
   }
 
   async getActiveMeter(db) {
@@ -73,6 +89,16 @@ export class Category {
    */
   async deleteValue(db, time) {
     return db.del(this.valueKey(time));
+  }
+
+
+  static async entry(db, name) {
+    const text =
+      `select * from category where name='${name}'`;
+    const result = await db.query(text);
+
+    return new this(name, undefined, result.rows[0])
+    return result.rows.length > 0 ? new this(name, undefined, result.rows[0]) : undefined
   }
 
   /**
