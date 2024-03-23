@@ -11,10 +11,15 @@ test("initialize", async t => {
   const master = await Postgres.initialize(db);
 
   //t.is(master.schemaVersion, "1.0.0");
+  const categories = [];
+  
+  for await (const c of master.categories()) {
+    categories.push(c);
+  }
+  
   t.is(master.db, db);
 
-  t.deepEqual([], await master.categories());
-  await db.end();
+  t.deepEqual([], categories);
 });
 
 const SECONDS_A_DAY = 60 * 60 * 24;

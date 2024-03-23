@@ -50,34 +50,23 @@ export class Postgres {
 
 
   /**
- * List Categories.
-
-  async *categories() {
-    //await this.db.connect();
-    const result = await this.db.query(
-      "SELECT name from category"
-    );
-    //console.log(answer.rows);
-    //await this.db.end();
-    console.log("result:", result.rows)
-    for (const row of result.rows) {
-      yield row; // Ergebnisse zeilenweise als Generator zurückgeben
-    }
-    //return answer.rows
+   * Close the underlaying database.
+   */
+  close() {
+    return this.db.end();
   }
- */
 
-  
   async *categories() {
     const sql = "SELECT name from category";
-
     const stream = new QueryStream(sql, [])
-    this.db.query(stream)
+    const client = await this.db.connect()
+    client.query(stream)
 
     for await (const row of stream) {
-      console.log("xxxxx", row)
       yield row;
     }
+    client.release()
+
   }
 
 
