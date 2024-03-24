@@ -3,19 +3,23 @@ import pg from "pg";
 import pcConnectionString from "pg-connection-string";
 import { chunksToStatements } from "../src/util.mjs";
 
-async function load(client, chunks) {
+async function load(client, chunks, properties) {
   try {
     await client.connect();
 
-    for await (const statement of chunksToStatements(chunks)) {
+    for await (let statement of chunksToStatements(chunks)) {
+      statement = statement.replaceAll(/:\(\w+\)/g, key => properties[key]);
+
       console.log(statement);
       const result = await client.query(statement);
-      console.log("RESULT",result.rows);
+      console.log("RESULT", result.rows);
     }
 
-    await client.end();
   } catch (e) {
     console.log(e);
+  }
+  finally {
+    await client.end();
   }
 }
 
@@ -23,4 +27,4 @@ const file = "src/sql/schema.sql";
 const config = pcConnectionString.parse(process.env.POSTGRES_URL);
 const client = new pg.Client(config);
 
-load(client, createReadStream(file, "utf8"));
+load(client, createReadStream(file, "utf8"), { version: "1" });
