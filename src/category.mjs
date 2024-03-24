@@ -25,14 +25,8 @@ export class Category {
     };
   }
 
-  constructor(name, owner, options) {
-    if (!name.match(/^[\_\-\w]+$/)) {
-      throw new Error("only letters digits '-' and '_' are allowed in names");
-    }
-
+  constructor(name ) {
     this.name = name;
-    this.owner = owner;
-    definePropertiesFromOptions(this, options);
   }
 
   /**

@@ -50,7 +50,8 @@ export class Postgres extends Master {
     client.query(stream);
 
     for await (const row of stream) {
-      yield row;
+      const category = new Category(row.name);
+      yield category;
     }
     client.release();
   }
