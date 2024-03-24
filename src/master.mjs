@@ -1,15 +1,12 @@
-import { Master} from "@konsumation/model";
+import { Master } from "@konsumation/model";
 import { Category } from "./category.mjs";
 import { Meter } from "./meter.mjs";
 import QueryStream from "pg-query-stream";
-export {
-  Category,
-  Meter,
-};
+export { Category, Meter };
 
 function checkVersion(version) {
   if (version !== "1.0.0") {
-    throw new Error(`Unsupported schema version `);
+    throw new Error(`Unsupported schema version`);
   }
 }
 
@@ -20,11 +17,9 @@ function checkVersion(version) {
  * @property {string} schemaVersion
  */
 export class Postgres extends Master {
-
   db;
-  
+
   static async initialize(db) {
-    let meta;
     /**
      * get meta info like schema version
      */
@@ -33,18 +28,13 @@ export class Postgres extends Master {
     const answer = await db.query(
       "SELECT appversion FROM version order by migrated"
     );
-    //console.log(answer.rows[0].appversion);
-    meta = {
-      schemaVersion: answer.rows[0].appversion
-    };
     checkVersion(answer.rows[0].appversion);
 
-    const master = new Postgres("unnamed", undefined, meta);
+    const master = new Postgres();
     master.db = db;
-
+    master.schemaVersion = answer.rows[0].appversion;
     return master;
   }
-
 
   /**
    * Close the underlaying database.
@@ -55,16 +45,13 @@ export class Postgres extends Master {
 
   async *categories() {
     const sql = "SELECT name from category";
-    const stream = new QueryStream(sql, [])
-    const client = await this.db.connect()
-    client.query(stream)
+    const stream = new QueryStream(sql, []);
+    const client = await this.db.connect();
+    client.query(stream);
 
     for await (const row of stream) {
       yield row;
     }
-    client.release()
-
+    client.release();
   }
-
-
 }
