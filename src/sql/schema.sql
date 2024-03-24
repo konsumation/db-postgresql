@@ -43,5 +43,3 @@ insert into
     version (appversion)
 values
     (:'version') RETURNING *;
-
-commit;
