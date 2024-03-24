@@ -13,16 +13,16 @@ permissions:
 jobs:
   test-node:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 20.11.1
     env:
       POSTGRES_USER: postgres
       PGPASSWORD: postgres
       POSTGRES_DB: ci_db_test
       POSTGRES_HOST: localhost
       POSTGRES_PORT: 5432
-    strategy:
-      matrix:
-        node-version:
-          - 20.11.1
     services:
       postgres:
         image: postgres:16
