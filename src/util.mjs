@@ -10,9 +10,11 @@ import { execaCommand } from "execa";
  */
 export async function prepareDBSchemaFor(name, withInstall = true) {
   if (withInstall) {
-    const RECRATESQL = new URL("sql/recreateDB.sql", import.meta.url).pathname
-    await execaCommand(`psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -a -f ${RECRATESQL} -v ON_ERROR_STOP=1 -v name=${name}`)
-  };
+    const RECRATESQL = new URL("sql/recreateDB.sql", import.meta.url).pathname;
+    await execaCommand(
+      `psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -a -f ${RECRATESQL} -v ON_ERROR_STOP=1 -v name=${name}`
+    );
+  }
 
   const db = new pg.Pool({
     host: process.env.POSTGRES_HOST,
@@ -21,13 +23,40 @@ export async function prepareDBSchemaFor(name, withInstall = true) {
     //password: process.env.POSTGRES_PASSWORD, --> alternative PGPASSWORD
     database: name,
     allowExitOnIdle: true
-  })
+  });
 
-  if (!withInstall) { return db }
+  if (!withInstall) {
+    return db;
+  }
 
-  const DEPLOYSQL = new URL("sql/schema.sql", import.meta.url).pathname
+  const DEPLOYSQL = new URL("sql/schema.sql", import.meta.url).pathname;
 
-  await execaCommand(`psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${name} -a -f ${DEPLOYSQL} -v ON_ERROR_STOP=1 -v version=1.0.0`)
+  await execaCommand(
+    `psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${name} -a -f ${DEPLOYSQL} -v ON_ERROR_STOP=1 -v version=1.0.0`
+  );
 
-  return db
+  return db;
+}
+
+/**
+ * Convert String chunks into sequence of statements.
+ * @param {AsyncIterable<string>} chunks
+ * @return {AsyncIterable<string>} statements
+ */
+export async function* chunksToStatements(chunks) {
+  let buffer = "";
+  for await (const chunk of chunks) {
+    buffer += chunk;
+
+    const statements = buffer.split(/;\n/);
+    buffer = statements.pop();
+
+    for (const statement of statements) {
+      yield statement;
+    }
+  }
+
+  if (buffer.length) {
+    yield buffer;
+  }
 }
