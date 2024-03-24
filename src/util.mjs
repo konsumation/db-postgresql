@@ -39,9 +39,9 @@ export async function prepareDBSchemaFor(name, withInstall = true) {
 }
 
 /**
- * Convert String chunks into sequence of statements.
+ * Convert string chunk sequence into sequence of statements.
  * @param {AsyncIterable<string>} chunks
- * @return {AsyncIterable<string>} statements
+ * @return {AsyncIterable<string>}
  */
 export async function* chunksToStatements(chunks) {
   let buffer = "";
@@ -56,7 +56,33 @@ export async function* chunksToStatements(chunks) {
     }
   }
 
-  if (buffer.length) {
+  if (buffer?.length) {
     yield buffer;
+  }
+}
+
+/**
+ * Execute DML statements
+ * @param {*} client
+ * @param {AsyncIterable<string>} chunks 
+ * @param {object} properties key value pairs to replace
+ */
+export async function executeStatements(client, chunks, properties) {
+  try {
+    await client.connect();
+
+    for await (let statement of chunksToStatements(chunks)) {
+      statement = statement.replaceAll(/:\(\w+\)/g, key => properties[key]);
+
+      console.log(statement);
+      const result = await client.query(statement);
+      console.log("RESULT", result.rows);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+  finally {
+    await client.end();
   }
 }

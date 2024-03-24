@@ -2,7 +2,6 @@ import { Meter } from "./meter.mjs";
 //import { Note } from "./note.mjs";
 import { METER_ATTRIBUTES } from "./consts.mjs";
 import { description } from "./attributes.mjs";
-import { definePropertiesFromOptions } from "./attribute-extras.mjs"
 
 /**
  * Value Category.
@@ -21,18 +20,18 @@ export class Category {
   static get attributes() {
     return {
       description,
-      ...METER_ATTRIBUTES,
+      ...METER_ATTRIBUTES
     };
   }
 
-  constructor(name ) {
+  constructor(name) {
     this.name = name;
   }
 
   /**
    * Add category record to database.
-   * @param {*} db 
-   * @returns 
+   * @param {*} db
+   * @returns
    */
   async write(db) {
     const text =
@@ -43,12 +42,11 @@ export class Category {
   }
 
   /**
-* Delete record from database.
-* @param {pg} db
-*/
+   * Delete record from database.
+   * @param {pg} db
+   */
   async delete(db) {
-    const text =
-      `delete from category where name='${this.name}' RETURNING *`;
+    const text = `delete from category where name='${this.name}' RETURNING *`;
     //TODO check result output from query and throw error if needed
     return db.query(text);
   }
@@ -67,13 +65,13 @@ export class Category {
     const answer = await db.query(insertValue, [
       value,
       await this.getActiveMeter(),
-      time,
+      time
     ]);
     //return db.put(this.valueKey(time), value);
   }
 
   async getValue(db, time) {
-    return db.get(this.valueKey(time), { asBuffer: false }).catch((err) => { });
+    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => {});
   }
 
   /**
@@ -85,14 +83,14 @@ export class Category {
     return db.del(this.valueKey(time));
   }
 
-
   static async entry(db, name) {
-    const text =
-      `select * from category where name='${name}'`;
+    const text = `select * from category where name='${name}'`;
     const result = await db.query(text);
 
-    return new this(name, undefined, result.rows[0])
-    return result.rows.length > 0 ? new this(name, undefined, result.rows[0]) : undefined
+    return new this(name, undefined, result.rows[0]);
+    return result.rows.length > 0
+      ? new this(name, undefined, result.rows[0])
+      : undefined;
   }
 
   /**
@@ -115,24 +113,6 @@ export class Category {
       const time = parseInt(data.key.toString().slice(prefixLength), 10);
       yield { value, time };
     }
-  }
-
-  /**
-   * Get values of the category as ascii text stream with time and value on each line.
-   * @param {levelup} db
-   * @param {Object} options
-   * @param {string} options.gte time of earliest value
-   * @param {string} options.lte time of latest value
-   * @param {boolean} options.reverse order
-   * @return {Readable}
-   */
-  readStream(db, options) {
-    const key = VALUE_PREFIX + this.name + ".";
-
-    return new CategoryValueReadStream(
-      db.iterator(readStreamWithTimeOptions(key, options)),
-      key.length
-    );
   }
 
   /**
@@ -161,36 +141,3 @@ export class Category {
     yield* this.readDetails(Note, db, options);
   }
 }
-
-/*
-class CategoryValueReadStream extends Readable {
-  constructor(iterator, prefixLength) {
-    super();
-    Object.defineProperties(this, {
-      iterator: { value: iterator },
-      prefixLength: { value: prefixLength },
-    });
-  }
-  _read() {
-    if (this.destroyed) return;
-
-    this.iterator.next((err, key, value) => {
-      if (this.destroyed) return;
-      if (err) {
-        return this.iterator.end((err2) => callback(err || err2));
-      }
-
-      if (key === undefined && value === undefined) {
-        this.push(null);
-      } else {
-        this.push(
-          `${parseInt(
-            key.toString().slice(this.prefixLength),
-            10
-          )} ${parseFloat(value.toString())}\n`
-        );
-      }
-    });
-  }
-}
-*/

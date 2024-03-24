@@ -1,7 +1,10 @@
 import { Master } from "@konsumation/model";
+import QueryStream from "pg-query-stream";
 import { Category } from "./category.mjs";
 import { Meter } from "./meter.mjs";
-import QueryStream from "pg-query-stream";
+import {executeStatements} from "./util.mjs";
+import { createReadStream } from "node:fs";
+
 export { Category, Meter };
 
 function checkVersion(version) {
@@ -29,6 +32,10 @@ export class Postgres extends Master {
       "SELECT appversion FROM version order by migrated"
     );
     checkVersion(answer.rows[0].appversion);
+
+    const sql = new URL("sql/schema.sql", import.meta.url).pathname;
+
+    await executeStatements(db, createReadStream(sql, "utf8"), { version: "1" });
 
     const master = new Postgres();
     master.db = db;
