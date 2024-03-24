@@ -2,7 +2,7 @@ CREATE TABLE category (
     id SERIAL,
     name VARCHAR(30) NOT NULL UNIQUE,
     description VARCHAR(80),
-    created timestamp NOT NULL DEFAULT current_timestamp
+    created TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
 ALTER TABLE
