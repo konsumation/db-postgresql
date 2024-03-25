@@ -8,12 +8,12 @@ CREATE TABLE category (
 CREATE TABLE meter (
     id SERIAL PRIMARY KEY,
     meterserial VARCHAR(100),
-    category INT NOT NULL,
+    categoryid INT NOT NULL,
     description VARCHAR(80),
     unit VARCHAR(10),
     fractionalDigits INT,
     validfrom DATE,
-    FOREIGN KEY (category) REFERENCES category (id)
+    FOREIGN KEY (categoryid) REFERENCES category (id)
 );
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
