@@ -1,25 +1,19 @@
 CREATE TABLE category (
-    id SERIAL,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL UNIQUE,
     description VARCHAR(80),
     created TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
-ALTER TABLE
-    category
-ADD
-    CONSTRAINT category_pk PRIMARY KEY (id, name);
-
 CREATE TABLE meter (
     id SERIAL PRIMARY KEY,
     meterserial VARCHAR(100),
-    categoryid INT NOT NULL,
-    categoryname VARCHAR(30) NOT NULL,
+    category INT NOT NULL,
     description VARCHAR(80),
     unit VARCHAR(10),
     fractionalDigits INT,
     validfrom DATE,
-    FOREIGN KEY (categoryid, categoryname) REFERENCES category (id, name)
+    FOREIGN KEY (category) REFERENCES category (id)
 );
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
@@ -42,4 +36,4 @@ CREATE TABLE version (
 insert into
     version (appversion)
 values
-    (:'version') RETURNING *;
+    ('1');
