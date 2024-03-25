@@ -37,8 +37,6 @@ export class PostgresMaster extends Master {
       answer = await db.query(
         "SELECT schemaversion FROM version order by migrated"
       )
-
-      console.log(answer);
     } catch (e) {
       if (e.message.match('relation "version" does not exist')) {
         const sql = new URL("sql/schema.sql", import.meta.url).pathname;
