@@ -1,5 +1,6 @@
 import test from "ava";
-import { Master, Category } from "@konsumation/konsum-db-postgresql";
+import { Master, Category, Meter } from "@konsumation/konsum-db-postgresql";
+
 import { prepareDBSchemaFor } from "../src/util.mjs"
 
 const db = await prepareDBSchemaFor("category");
@@ -43,11 +44,10 @@ test.only("Category write / read / delete", async t => {
 
 const SECONDS_A_DAY = 60 * 60 * 24;
 
-test.skip("values write / read", async t => {
-  const dbf = tmp.tmpNameSync();
-  const master = await Master.initialize(await levelup(leveldown(dbf)));
+test.only("values write / read", async t => {
+  const master = await Postgres.initialize(db);
 
-  const c = new Category(`CAT-1`, master, { unit: "kWh" });
+  const c = new Category(`CAT-1val`, master, { unit: "kWh" });
   await c.write(master.db);
 
   const first = Date.now();
@@ -87,9 +87,9 @@ test.skip("values write / read", async t => {
 
 test.skip("values delete", async t => {
   const dbf = tmp.tmpNameSync();
-  const master = await Master.initialize(await levelup(leveldown(dbf)));
+  const master = await Postgres.initialize(db);
 
-  const c = new Category(`CAT-2`, master, { unit: "kWh" });
+  const c = new Category(`CAT-2val`, master, { unit: "kWh" });
   await c.write(master.db);
 
   const first = Date.now();
