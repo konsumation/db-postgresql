@@ -66,7 +66,7 @@ export async function* chunksToStatements(chunks) {
 /**
  * https://stackoverflow.com/questions/22636388/import-sql-file-in-node-js-and-execute-against-postgresql
  * TODO Handling of create functions with multiple rows and ;\n see example in schema.sql 
- /* TODO handle \n; in util 
+  TODO handle \n; in util 
 CREATE OR REPLACE FUNCTION update_lastmodified()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -79,7 +79,7 @@ CREATE TRIGGER update_lastmodified_trigger
 AFTER UPDATE ON category
 FOR EACH ROW
 EXECUTE FUNCTION update_lastmodified();
-*/
+
  * Execute DML statements
  * @param {*} client
  * @param {AsyncIterable<string>} chunks
