@@ -2,7 +2,7 @@ import { Category } from "@konsumation/model";
 
 export class PostgresCategory extends Category {
 
-  id;
+id;
   //TODO
   // DONE return id from insert and create this.id
   // write insert or update values...
@@ -15,12 +15,19 @@ export class PostgresCategory extends Category {
    * @returns
    */
   async write(db) {
-    const text =
-      "INSERT INTO category(name, description) VALUES($1, $2) RETURNING *";
-    const values = [this.name, this.description];
+    //TODO check if columns are changed?
+    let text = "INSERT INTO category(name, description) VALUES($1, $2) RETURNING *";
+    let values = [this.name, this.description];
+
+    if (this.id) {
+      text = `update category set name='${this.name}', description=${this.description}`;
+      values = []
+    }
+
     //TODO check result output from query and throw error if needed
     const result = await db.query(text, values);
-    return this.id=result.rows[0].id
+    //console.log(result)
+    return this.id ? this.id : this.id = result.rows[0].id
   }
 
   /**
@@ -52,7 +59,7 @@ export class PostgresCategory extends Category {
   }
 
   async getValue(db, time) {
-    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => {});
+    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => { });
   }
 
   static async entry(db, name) {

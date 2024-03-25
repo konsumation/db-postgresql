@@ -5,7 +5,7 @@ import { prepareDBSchemaFor } from "../src/util.mjs"
 
 const db = await prepareDBSchemaFor("category");
 
-test.only("Category write / read / delete", async t => {
+test.only("Category write / read / update / delete", async t => {
   const master = await Master.initialize(db);
 
   for (let i = 0; i < 10; i++) {
@@ -14,6 +14,7 @@ test.only("Category write / read / delete", async t => {
     });
     await c.write(master.db);
     t.is(c.id, i+1)
+    t.is(c.description,`Category CAT-${i}`)
   }
 
   const cs = [];
@@ -39,6 +40,14 @@ test.only("Category write / read / delete", async t => {
 
   c = await Category.entry(master.db, "CAT-7");
   //t.falsy(c);
+  for (let i = 0; i < 2; i++) {
+    const c = new Category(`CAT-update`, master, {
+      description: `Category CAT-${i}`
+    });
+    await c.write(master.db);
+    t.is(c.description, `Category CAT-${i}`)
+  }
+
 
   await master.close();
 });
