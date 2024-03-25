@@ -46,7 +46,7 @@ export class PostgresMaster extends Master {
 
     checkVersion(answer?.rows[0].schemaversion);
 
-    const master = new Postgres();
+    const master = new PostgresMaster();
     master.db = db;
     master.schemaVersion = answer.rows[0].schemaversion;
     return master;
