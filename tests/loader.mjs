@@ -4,6 +4,7 @@ import pcConnectionString from "pg-connection-string";
 import { executeStatements } from "../src/util.mjs";
 
 const file = "src/sql/schema.sql";
+//POSTGRES_URL=postgres://<user>:<password>@<host>:<port>/<database>?<query>
 const config = pcConnectionString.parse(process.env.POSTGRES_URL);
 const client = new pg.Client(config);
 
