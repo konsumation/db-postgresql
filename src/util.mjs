@@ -77,9 +77,11 @@ export async function executeStatements(client, chunks, properties) {
         key => properties[key.substring(1)]
       );
 
-      console.log(`|${statement}|`);
+      //console.log(`|${statement}|`);
+      //const client = await db.connect()
       const result = await client.query(statement);
-      console.log("RESULT", result.rows);
+      //client.release()
+      //console.log("RESULT", result);
     }
   } catch (e) {
     console.log(e);
