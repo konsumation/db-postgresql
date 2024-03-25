@@ -1,12 +1,11 @@
 import test from "ava";
-import { Postgres, Category } from "@konsumation/konsum-db-postgresql";
-
+import { Master, Category } from "@konsumation/konsum-db-postgresql";
 import { prepareDBSchemaFor } from "../src/util.mjs"
 
 const db = await prepareDBSchemaFor("category");
 
 test.only("Category write / read / delete", async t => {
-  const master = await Postgres.initialize(db);
+  const master = await Master.initialize(db);
 
   for (let i = 0; i < 10; i++) {
     const c = new Category(`CAT-${i}`, master, {

@@ -1,7 +1,4 @@
-import { Meter } from "./meter.mjs";
-//import { Note } from "./note.mjs";
-import { METER_ATTRIBUTES } from "./consts.mjs";
-import { description } from "./attributes.mjs";
+import { Category } from "@konsumation/model";
 
 /**
  * Value Category.
@@ -16,18 +13,7 @@ import { description } from "./attributes.mjs";
  * @property {string} unit physical unit
  * @property {number} fractionalDigits display precission
  */
-export class Category {
-  static get attributes() {
-    return {
-      description,
-      ...METER_ATTRIBUTES
-    };
-  }
-
-  constructor(name) {
-    this.name = name;
-  }
-
+export class PostgresCategory extends Category {
   /**
    * Add category record to database.
    * @param {*} db
@@ -67,20 +53,10 @@ export class Category {
       await this.getActiveMeter(db),
       time
     ]);
-    //return db.put(this.valueKey(time), value);
   }
 
   async getValue(db, time) {
     return db.get(this.valueKey(time), { asBuffer: false }).catch(err => {});
-  }
-
-  /**
-   *
-   * @param {levelup} db
-   * @param {number} time seconds since epoch
-   */
-  async deleteValue(db, time) {
-    return db.del(this.valueKey(time));
   }
 
   static async entry(db, name) {
@@ -91,53 +67,5 @@ export class Category {
     return result.rows.length > 0
       ? new this(name, undefined, result.rows[0])
       : undefined;
-  }
-
-  /**
-   * Get values of the category.
-   * @param {levelup} db
-   * @param {Object} options
-   * @param {string} options.gte time of earliest value
-   * @param {string} options.lte time of latest value
-   * @param {boolean} options.reverse order
-   * @return {AsyncIterable<Object>}
-   */
-  async *values(db, options) {
-    const key = VALUE_PREFIX + this.name + ".";
-    const prefixLength = key.length;
-
-    for await (const data of db.createReadStream(
-      readStreamWithTimeOptions(key, options)
-    )) {
-      const value = parseFloat(data.value.toString());
-      const time = parseInt(data.key.toString().slice(prefixLength), 10);
-      yield { value, time };
-    }
-  }
-
-  /**
-   * Get Meters of the category.
-   * @param {levelup} db
-   * @param {Object} options
-   * @param {string} options.gte from name
-   * @param {string} options.lte up to name
-   * @param {boolean} options.reverse order
-   * @return {AsyncIterable<Meter>}
-   */
-  async *meters(db, options) {
-    yield* this.readDetails(Meter, db, options);
-  }
-
-  /**
-   * Get Notes of the category.
-   * @param {levelup} db
-   * @param {Object} options
-   * @param {string} options.gte time
-   * @param {string} options.lte up to time
-   * @param {boolean} options.reverse order
-   * @return {AsyncIterable<Meter>}
-   */
-  async *notes(db, options) {
-    yield* this.readDetails(Note, db, options);
   }
 }

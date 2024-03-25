@@ -1,11 +1,13 @@
-import { Master } from "@konsumation/model";
 import QueryStream from "pg-query-stream";
-import { Category } from "./category.mjs";
-import { Meter } from "./meter.mjs";
+import { Master } from "@konsumation/model";
+import { PostgresCategory } from "./category.mjs";
+import { PostgresMeter } from "./meter.mjs";
 import { executeStatements } from "./util.mjs";
 import { createReadStream } from "node:fs";
 
-export { Category, Meter };
+export { PostgresCategory as Category };
+export { PostgresMeter as Meter };
+export { PostgresMaster as Master };
 
 function checkVersion(version) {
   if (version !== "1") {
@@ -19,7 +21,7 @@ function checkVersion(version) {
  *
  * @property {string} schemaVersion
  */
-export class Postgres extends Master {
+export class PostgresMaster extends Master {
   db;
 
   static async initialize(db) {
@@ -64,7 +66,7 @@ export class Postgres extends Master {
     client.query(stream);
 
     for await (const row of stream) {
-      const category = new Category(row.name);
+      const category = new PostgresCategory(row.name);
       yield category;
     }
     client.release();
