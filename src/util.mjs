@@ -36,6 +36,7 @@ export async function prepareDBSchemaFor(name, withInstall = true) {
 
 /**
  * Convert string chunk sequence into sequence of statements.
+ * Also removes comment lines.
  * @param {AsyncIterable<string>} chunks
  * @return {AsyncIterable<string>}
  */
@@ -48,14 +49,18 @@ export async function* chunksToStatements(chunks) {
     buffer = statements.pop();
 
     for (const statement of statements) {
-      yield statement.replace(/--.*\n/, "");
+      yield statement.replaceAll(/\-\-.*\n/g, "");
     }
   }
 
   if (buffer?.length) {
-    yield buffer;
+    buffer = buffer.replaceAll(/\-\-.*\n/g, "");
+    if (buffer.length) {
+      yield buffer;
+    }
   }
 }
+
 
 /**
  * Execute DML statements
