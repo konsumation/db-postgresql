@@ -64,7 +64,7 @@ export class Category {
       "INSERT INTO values(value, meter, time) VALUES ($1,$2,$3) RETURNING id";
     const answer = await db.query(insertValue, [
       value,
-      await this.getActiveMeter(),
+      await this.getActiveMeter(db),
       time
     ]);
     //return db.put(this.valueKey(time), value);
