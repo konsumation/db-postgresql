@@ -3,7 +3,12 @@ import { Category } from "@konsumation/model";
 export class PostgresCategory extends Category {
 
   id;
-  
+  //TODO
+  // DONE return id from insert and create this.id
+  // write insert or update values...
+  // getactivemeter from id (try without database)
+  // list meters
+  // meter add and meter delete
   /**
    * Add category record to database.
    * @param {*} db
@@ -14,7 +19,8 @@ export class PostgresCategory extends Category {
       "INSERT INTO category(name, description) VALUES($1, $2) RETURNING *";
     const values = [this.name, this.description];
     //TODO check result output from query and throw error if needed
-    return db.query(text, values);
+    const result = await db.query(text, values);
+    return this.id=result.rows[0].id
   }
 
   /**
@@ -52,7 +58,6 @@ export class PostgresCategory extends Category {
   static async entry(db, name) {
     const text = `select * from category where name='${name}'`;
     const result = await db.query(text);
-
     return new this(name, undefined, result.rows[0]);
     return result.rows.length > 0
       ? new this(name, undefined, result.rows[0])

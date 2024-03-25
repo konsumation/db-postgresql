@@ -13,6 +13,7 @@ test.only("Category write / read / delete", async t => {
       description: `Category CAT-${i}`
     });
     await c.write(master.db);
+    t.is(c.id, i+1)
   }
 
   const cs = [];
@@ -44,8 +45,8 @@ test.only("Category write / read / delete", async t => {
 
 const SECONDS_A_DAY = 60 * 60 * 24;
 
-test.only("values write / read", async t => {
-  const master = await Postgres.initialize(db);
+test("values write / read", async t => {
+  const master = await Master.initialize(db);
 
   const c = new Category(`CAT-1val`, master, { unit: "kWh" });
   await c.write(master.db);
