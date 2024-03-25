@@ -1,19 +1,9 @@
 import { Category } from "@konsumation/model";
 
-/**
- * Value Category.
- * @param {string} name category name
- * @param {Object} options
- * @param {string} options.description
- * @param {string} options.unit physical unit like kWh or m3
- * @param {number} options.fractionalDigits display precission
- *
- * @property {string} name category name
- * @property {string} description
- * @property {string} unit physical unit
- * @property {number} fractionalDigits display precission
- */
 export class PostgresCategory extends Category {
+
+  id;
+  
   /**
    * Add category record to database.
    * @param {*} db
