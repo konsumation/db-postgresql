@@ -15,8 +15,8 @@ export async function prepareDBSchemaFor(name, withInstall = true) {
 
   if (withInstall) {
     const RECRATESQL = new URL("sql/recreateDB.sql", import.meta.url).pathname;
-    const client = new pg.Client(config);
-    await executeStatements(client, createReadStream(RECRATESQL, "utf8"), { name:name });
+    const client = new pg.Pool(config);
+    await executeStatements(client, createReadStream(RECRATESQL, "utf8"), { name });
     /*
     await execaCommand(
       `psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -a -f ${RECRATESQL} -v ON_ERROR_STOP=1 -v name=${name}`
@@ -26,22 +26,10 @@ export async function prepareDBSchemaFor(name, withInstall = true) {
 
   config.database = name;
   config.allowExitOnIdle = true;
+  //config.idleTimeoutMillis= 10;
+  //config.search_path="";
 
   const db = new pg.Pool(config);
-
-  if (!withInstall) {
-    return db;
-  }
-
-  const DEPLOYSQL = new URL("sql/schema.sql", import.meta.url).pathname;
-  const client = new pg.Client(config);
-  await executeStatements(client, createReadStream(DEPLOYSQL, "utf8"), { version:"1" });
-
-  /*
-  await execaCommand(
-    `psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${name} -a -f ${DEPLOYSQL} -v ON_ERROR_STOP=1 -v version=1.0.0`
-  );
-*/
 
   return db;
 }
@@ -60,7 +48,7 @@ export async function* chunksToStatements(chunks) {
     buffer = statements.pop();
 
     for (const statement of statements) {
-      yield statement.replace(/--.*\n/,"");
+      yield statement.replace(/--.*\n/, "");
     }
   }
 
@@ -77,12 +65,12 @@ export async function* chunksToStatements(chunks) {
  */
 export async function executeStatements(client, chunks, properties) {
   try {
-    await client.connect();
+    //await client.connect();
 
     for await (let statement of chunksToStatements(chunks)) {
       statement = statement.replaceAll(/:\(\w+\)|:\w+/g, key => {
-//console.log(key, properties)
-        return properties[key.substring(1)]});
+        return properties[key.substring(1)]
+      });
 
       console.log(`|${statement}|`);
       const result = await client.query(statement);
@@ -91,9 +79,6 @@ export async function executeStatements(client, chunks, properties) {
 
   } catch (e) {
     console.log(e);
-    throw("TODO")
-  }
-  finally {
-    await client.end();
+    throw ("TODO")
   }
 }

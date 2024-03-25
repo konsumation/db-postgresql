@@ -29,11 +29,11 @@ values
     );
 
 CREATE TABLE version (
-    appversion VARCHAR(50) NOT NULL,
+    schemaversion VARCHAR(50) NOT NULL,
     migrated TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
 insert into
-    version (appversion)
+    version (schemaversion)
 values
     ('1');

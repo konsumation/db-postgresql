@@ -2,7 +2,7 @@ import { Master } from "@konsumation/model";
 import QueryStream from "pg-query-stream";
 import { Category } from "./category.mjs";
 import { Meter } from "./meter.mjs";
-import {executeStatements} from "./util.mjs";
+import { executeStatements } from "./util.mjs";
 import { createReadStream } from "node:fs";
 
 export { Category, Meter };
@@ -27,19 +27,26 @@ export class Postgres extends Master {
      * get meta info like schema version
      */
     //await db.connect();
+    let answer;
+    try {
+      answer = await db.query(
+        "SELECT schemaversion FROM version order by migrated"
+      )
+    } catch (e) {
+      if (e.message.match('relation "version" does not exist')) {
+        const sql = new URL("sql/schema.sql", import.meta.url).pathname;
+        await executeStatements(db, createReadStream(sql, "utf8"), { version: "1" });
+        answer = await db.query(
+          "SELECT schemaversion FROM version order by migrated"
+        )
+      }
+    }
 
-    const answer = await db.query(
-      "SELECT appversion FROM version order by migrated"
-    );
-    checkVersion(answer.rows[0].appversion);
-
-    const sql = new URL("sql/schema.sql", import.meta.url).pathname;
-
-    await executeStatements(db, createReadStream(sql, "utf8"), { version: "1" });
+    checkVersion(answer?.rows[0].schemaversion);
 
     const master = new Postgres();
     master.db = db;
-    master.schemaVersion = answer.rows[0].appversion;
+    master.schemaVersion = answer.rows[0].schemaversion;
     return master;
   }
 
