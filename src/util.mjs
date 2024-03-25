@@ -65,6 +65,7 @@ export async function* chunksToStatements(chunks) {
 
 /**
  * TODO Handling of create functions with multiple rows and ;\n see example in schema.sql 
+ * https://stackoverflow.com/questions/22636388/import-sql-file-in-node-js-and-execute-against-postgresql
  * Execute DML statements
  * @param {*} client
  * @param {AsyncIterable<string>} chunks
