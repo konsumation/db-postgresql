@@ -8,7 +8,7 @@ import { createReadStream } from "node:fs";
 export { Category, Meter };
 
 function checkVersion(version) {
-  if (version !== "1.0.0") {
+  if (version !== "1") {
     throw new Error(`Unsupported schema version`);
   }
 }
