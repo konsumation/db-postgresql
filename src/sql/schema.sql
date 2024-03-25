@@ -2,9 +2,23 @@ CREATE TABLE category (
     id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL UNIQUE,
     description VARCHAR(80),
-    created TIMESTAMP NOT NULL DEFAULT current_timestamp
+    created TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    lastmodified TIMESTAMP
 );
+/* TODO handle \n; in util 
+CREATE OR REPLACE FUNCTION update_lastmodified()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.lastmodified := CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE TRIGGER update_lastmodified_trigger
+AFTER UPDATE ON category
+FOR EACH ROW
+EXECUTE FUNCTION update_lastmodified();
+*/
 CREATE TABLE meter (
     id SERIAL PRIMARY KEY,
     meterserial VARCHAR(100),
@@ -13,6 +27,7 @@ CREATE TABLE meter (
     unit VARCHAR(10),
     fractionalDigits INT,
     validfrom DATE,
+    lastmodified TIMESTAMP,
     FOREIGN KEY (categoryid) REFERENCES category (id)
 );
 

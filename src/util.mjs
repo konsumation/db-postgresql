@@ -64,6 +64,7 @@ export async function* chunksToStatements(chunks) {
 }
 
 /**
+ * TODO Handling of create functions with multiple rows and ;\n see example in schema.sql 
  * Execute DML statements
  * @param {*} client
  * @param {AsyncIterable<string>} chunks
