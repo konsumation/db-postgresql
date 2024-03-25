@@ -16,7 +16,9 @@ export async function prepareDBSchemaFor(name, withInstall = true) {
   if (withInstall) {
     const RECRATESQL = new URL("sql/recreateDB.sql", import.meta.url).pathname;
     const client = new pg.Pool(config);
-    await executeStatements(client, createReadStream(RECRATESQL, "utf8"), { name });
+    await executeStatements(client, createReadStream(RECRATESQL, "utf8"), {
+      name
+    });
     /*
     await execaCommand(
       `psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -a -f ${RECRATESQL} -v ON_ERROR_STOP=1 -v name=${name}`
@@ -61,29 +63,26 @@ export async function* chunksToStatements(chunks) {
   }
 }
 
-
 /**
  * Execute DML statements
  * @param {*} client
- * @param {AsyncIterable<string>} chunks 
+ * @param {AsyncIterable<string>} chunks
  * @param {object} properties key value pairs to replace
  */
 export async function executeStatements(client, chunks, properties) {
   try {
-    //await client.connect();
-
     for await (let statement of chunksToStatements(chunks)) {
-      statement = statement.replaceAll(/:\(\w+\)|:\w+/g, key => {
-        return properties[key.substring(1)]
-      });
+      statement = statement.replaceAll(
+        /:\(\w+\)|:\w+/g,
+        key => properties[key.substring(1)]
+      );
 
       console.log(`|${statement}|`);
       const result = await client.query(statement);
       console.log("RESULT", result.rows);
     }
-
   } catch (e) {
     console.log(e);
-    throw ("TODO")
+    throw "TODO";
   }
 }

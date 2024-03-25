@@ -9,8 +9,11 @@ export { PostgresCategory as Category };
 export { PostgresMeter as Meter };
 export { PostgresMaster as Master };
 
+
+const VERSION = "1";
+
 function checkVersion(version) {
-  if (version !== "1") {
+  if (version !== VERSION) {
     throw new Error(`Unsupported schema version`);
   }
 }
@@ -34,10 +37,12 @@ export class PostgresMaster extends Master {
       answer = await db.query(
         "SELECT schemaversion FROM version order by migrated"
       )
+
+      console.log(answer);
     } catch (e) {
       if (e.message.match('relation "version" does not exist')) {
         const sql = new URL("sql/schema.sql", import.meta.url).pathname;
-        await executeStatements(db, createReadStream(sql, "utf8"), { version: "1" });
+        await executeStatements(db, createReadStream(sql, "utf8"), { version: VERSION });
         answer = await db.query(
           "SELECT schemaversion FROM version order by migrated"
         )
