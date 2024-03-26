@@ -1,5 +1,6 @@
 import test from "ava";
 import { Master, Category, Meter } from "@konsumation/konsum-db-postgresql";
+import { testCategoryConstructor } from "@konsumation/db-test";
 import { createDatabase } from "./util.mjs";
 
 
@@ -7,17 +8,7 @@ const url = process.env.POSTGRES_URL + `?currentSchema=myschema`;
 
 test.before(async t => createDatabase(url));
 
-test("Category constructor", async t => {
-  const master = await Master.initialize(url);
-  const c = new Category({
-    name: `CAT-constructor`,
-    description: `Category insert`
-  });
-  t.is(c.name, "CAT-constructor")
-  t.is(c.description, "Category insert")
-  await master.close();
-});
-
+test("Category constructor", t => testCategoryConstructor(t,Category));
 
 test("Category write / read / update / delete", async t => {
   const master = await Master.initialize(url);
