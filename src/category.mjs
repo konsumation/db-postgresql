@@ -2,7 +2,7 @@ import { Category } from "@konsumation/model";
 
 export class PostgresCategory extends Category {
 
-id;
+  id;
   //TODO
   // DONE return id from insert and create this.id
   // write insert or update values...
@@ -18,12 +18,10 @@ id;
     //TODO check if columns are changed?
     let text = "INSERT INTO category(name, description) VALUES($1, $2) RETURNING *";
     let values = [this.name, this.description];
-
     if (this.id) {
-      text = `update category set name='${this.name}', description=${this.description}`;
+      text = `update category set name='${this.name}', description='${this.description}' where id=${this.id}`;
       values = []
     }
-
     //TODO check result output from query and throw error if needed
     const result = await db.query(text, values);
     //console.log(result)
@@ -65,7 +63,7 @@ id;
   static async entry(db, name) {
     const text = `select * from category where name='${name}'`;
     const result = await db.query(text);
-    return new this(name, undefined, result.rows[0]);
+    return new this({ name, ...result.rows[0] });
     return result.rows.length > 0
       ? new this(name, undefined, result.rows[0])
       : undefined;

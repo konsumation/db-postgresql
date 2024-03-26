@@ -6,13 +6,13 @@ import { prepareDBSchemaFor } from "../src/util.mjs"
 const db = await prepareDBSchemaFor("category");
 const master = await Master.initialize(db);
 
-test("Category constructor", async t =>{
-    const c = new Category({
+test("Category constructor", async t => {
+  const c = new Category({
     name: `CAT-constructor`,
     description: `Category insert`
   });
-t.is(c.name,"CAT-constructor")
-t.is(c.description,"Category insert")
+  t.is(c.name, "CAT-constructor")
+  t.is(c.description, "Category insert")
 });
 
 
@@ -25,8 +25,8 @@ test("Category write / read / update / delete", async t => {
       description: `Category CAT-${i}`
     });
     await c.write(master.db);
-    t.is(c.id, i+1)
-    t.is(c.description,`Category CAT-${i}`)
+    t.is(c.id, i + 1)
+    t.is(c.description, `Category CAT-${i}`)
   }
 
   const cs = [];
@@ -52,17 +52,18 @@ test("Category write / read / update / delete", async t => {
 
   c = await Category.entry(master.db, "CAT-7");
   //t.falsy(c);
-  for (let i = 0; i < 2; i++) {
-    const c = new Category( {
-      name: `CAT-update`,
-      description: `Category CAT-${i}`
-    });
-    await c.write(master.db);
-    t.is(c.description, `Category CAT-${i}`)
-  }
-
-
-  await master.close();
+  c = new Category({
+    name: `CAT-Update`,
+    description: `Category CAT-insert`
+  });
+  await c.write(master.db);
+  t.is(c.description, `Category CAT-insert`)
+  c.description = "update"
+  c.name = "bla"
+  await c.write(master.db);
+  t.is(c.description, `update`)
+  t.is(c.name, `update`)
+  //await master.close();
 });
 
 const SECONDS_A_DAY = 60 * 60 * 24;
@@ -70,7 +71,7 @@ const SECONDS_A_DAY = 60 * 60 * 24;
 test("values write / read", async t => {
   //const master = await Master.initialize(db);
 
-  const c = new Category({name: `CAT-1val`});
+  const c = new Category({ name: `CAT-1val` });
   await c.write(master.db);
 
   const first = Date.now();
