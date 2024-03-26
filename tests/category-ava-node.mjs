@@ -1,23 +1,26 @@
 import test from "ava";
 import { Master, Category, Meter } from "@konsumation/konsum-db-postgresql";
+import { createDatabase } from "./util.mjs";
 
-import { prepareDBSchemaFor } from "../src/util.mjs"
 
-const db = await prepareDBSchemaFor("category");
-const master = await Master.initialize(db);
+const url = process.env.POSTGRES_URL + `?currentSchema=myschema`;
+
+test.before(async t => createDatabase(url));
 
 test("Category constructor", async t => {
+  const master = await Master.initialize(url);
   const c = new Category({
     name: `CAT-constructor`,
     description: `Category insert`
   });
   t.is(c.name, "CAT-constructor")
   t.is(c.description, "Category insert")
+  await master.close();
 });
 
 
 test("Category write / read / update / delete", async t => {
-  //const master = await Master.initialize(db);
+  const master = await Master.initialize(url);
 
   for (let i = 0; i < 10; i++) {
     const c = new Category({
@@ -62,11 +65,14 @@ test("Category write / read / update / delete", async t => {
   c.name = "bla"
   await c.write(master.db);
   t.is(c.description, `update`)
-  t.is(c.name, `update`)
-  //await master.close();
+  t.is(c.name, `bla`)
+  await master.close();
 });
 
 const SECONDS_A_DAY = 60 * 60 * 24;
+test("Meter write / read / update / delete", async t => {
+
+})
 
 test("values write / read", async t => {
   //const master = await Master.initialize(db);
