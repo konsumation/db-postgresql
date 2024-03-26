@@ -5,7 +5,7 @@ export class PostgresCategory extends Category {
   id;
   //TODO
   // DONE return id from insert and create this.id
-  // write insert or update values...
+  // DONE write insert or update values...
   // getactivemeter from id (try without database)
   // list meters
   // meter add and meter delete
@@ -38,6 +38,18 @@ export class PostgresCategory extends Category {
     return db.query(text);
   }
 
+  async addMeter(db){
+
+  }
+
+  async deleteMeter(db) {
+
+  }
+
+  async allMeters(db) {
+
+  }
+  
   async getActiveMeter(db) {
     const getActiveMeterSql = `select id from meter where categoryname='${this.name}' and validfrom = ( select max(validfrom) from meter where categoryname='${this.name}')`;
     const answer = await db.query(getActiveMeterSql);
