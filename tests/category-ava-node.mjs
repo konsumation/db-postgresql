@@ -70,8 +70,11 @@ test("Category write / read / update / delete", async t => {
 });
 
 const SECONDS_A_DAY = 60 * 60 * 24;
-test("Meter write / read / update / delete", async t => {
+test.skip("Meter write / read / update / delete", async t => {
+  const master = await Master.initialize(url);
+new Meter
 
+  await master.close();
 })
 
 test("values write / read", async t => {
