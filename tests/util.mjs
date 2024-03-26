@@ -3,10 +3,11 @@ import pg from "pg";
 
 export async function createDatabase(url) {
   const config = ConnectionString.parse(url);
-  const db = new pg.Pool(config);
 
   const database = config.database;
   delete config.database;
+
+  const db = new pg.Pool(config);
 
   // https://phoenixnap.com/kb/postgresql-drop-database
   for (const statement of [
