@@ -5,6 +5,7 @@ CREATE TABLE category (
     created TIMESTAMP NOT NULL DEFAULT current_timestamp,
     lastmodified TIMESTAMP
 );
+
 CREATE TABLE meter (
     id SERIAL PRIMARY KEY,
     meterserial VARCHAR(100),
