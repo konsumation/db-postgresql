@@ -4,12 +4,24 @@ import { Master, Category, Meter } from "@konsumation/konsum-db-postgresql";
 import { prepareDBSchemaFor } from "../src/util.mjs"
 
 const db = await prepareDBSchemaFor("category");
+const master = await Master.initialize(db);
 
-test.only("Category write / read / update / delete", async t => {
-  const master = await Master.initialize(db);
+test("Category constructor", async t =>{
+    const c = new Category({
+    name: `CAT-constructor`,
+    description: `Category insert`
+  });
+t.is(c.name,"CAT-constructor")
+t.is(c.description,"Category insert")
+});
+
+
+test("Category write / read / update / delete", async t => {
+  //const master = await Master.initialize(db);
 
   for (let i = 0; i < 10; i++) {
-    const c = new Category(`CAT-${i}`, master, {
+    const c = new Category({
+      name: `CAT-${i}`,
       description: `Category CAT-${i}`
     });
     await c.write(master.db);
@@ -41,7 +53,8 @@ test.only("Category write / read / update / delete", async t => {
   c = await Category.entry(master.db, "CAT-7");
   //t.falsy(c);
   for (let i = 0; i < 2; i++) {
-    const c = new Category(`CAT-update`, master, {
+    const c = new Category( {
+      name: `CAT-update`,
       description: `Category CAT-${i}`
     });
     await c.write(master.db);
@@ -55,9 +68,9 @@ test.only("Category write / read / update / delete", async t => {
 const SECONDS_A_DAY = 60 * 60 * 24;
 
 test("values write / read", async t => {
-  const master = await Master.initialize(db);
+  //const master = await Master.initialize(db);
 
-  const c = new Category(`CAT-1val`, master, { unit: "kWh" });
+  const c = new Category({name: `CAT-1val`});
   await c.write(master.db);
 
   const first = Date.now();
