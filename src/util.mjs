@@ -1,7 +1,6 @@
 import { createReadStream } from "node:fs";
 import pg from "pg";
 import pcConnectionString from "pg-connection-string";
-import { execaCommand } from "execa";
 
 /**
  * prepare extra database with given name and install schema into it
