@@ -5,7 +5,7 @@ export async function createDatabase(url) {
   const config = ConnectionString.parse(url);
 
   const database = config.database;
-  delete config.database;
+  config.database = 'postgres';
 
   const db = new pg.Pool(config);
 
