@@ -6,7 +6,7 @@ import { createSchema, dropSchema } from "./util.mjs";
 const SCHEMA = "konsum_test_1";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
-test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
+//test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("Category constructor", t => testCategoryConstructor(t, Category));
 
@@ -32,26 +32,30 @@ test("Category write / read / update / delete", async t => {
   t.true(cs.length >= 10);
 
   /*
-  let c = await Category.entry(master.db, "CAT-7");
+  let c = await Category.entry(master.context, "CAT-7");
   t.is(c.name, "CAT-7");
 
-  c = await Category.entry(master.db, "CAT-12");
+  c = await Category.entry(master.context, "CAT-12");
 
-  await c.delete(master.db);
+  await c.delete(master.context);
 
-  c = await Category.entry(master.db, "CAT-7");
-  c = new Category({
+  c = await Category.entry(master.context, "CAT-7");
+  */
+  let c = new Category({
     name: `CAT-Update`,
     description: `Category CAT-insert`
   });
-  await c.write(master.db);
+  await c.write(master.context);
   t.is(c.description, `Category CAT-insert`);
   c.description = "update";
   c.name = "bla";
-  await c.write(master.db);
+  await c.write(master.context);
+
+  c = await Category.entry(master.context, "bla");
+
   t.is(c.description, `update`);
   t.is(c.name, `bla`);
-  */
+  
   await master.close();
 });
 
@@ -67,7 +71,7 @@ test.skip("values write / read", async t => {
   const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
 
   const c = new Category({ name: `CAT-1val` });
-  await c.write(master.db);
+  await c.write(master.context);
 
   const first = Date.now();
   const firstValue = 77.34;
@@ -77,12 +81,12 @@ test.skip("values write / read", async t => {
   for (let i = 0; i < 100; i++) {
     last = new Date(first + SECONDS_A_DAY * i).getTime();
     lastValue = firstValue + i;
-    await c.writeValue(master.db, lastValue, last);
+    await c.writeValue(master.context, lastValue, last);
   }
 
   let values = [];
 
-  for await (const { value, time } of c.values(master.db)) {
+  for await (const { value, time } of c.values(master.context)) {
     values.push({ value, time });
   }
 
@@ -90,7 +94,7 @@ test.skip("values write / read", async t => {
   t.deepEqual(values[0], { value: firstValue, time: first });
 
   values = [];
-  for await (const { value, time } of c.values(master.db, {
+  for await (const { value, time } of c.values(master.context, {
     gte: first + SECONDS_A_DAY * 99,
     reverse: true
   })) {
@@ -109,7 +113,7 @@ test.skip("values delete", async t => {
   const master = await Postgres.initialize(db);
 
   const c = new Category(`CAT-2val`, master, { unit: "kWh" });
-  await c.write(master.db);
+  await c.write(master.context);
 
   const first = Date.now();
   const firstValue = 77.34;
@@ -119,13 +123,13 @@ test.skip("values delete", async t => {
   for (let i = 0; i < 3; i++) {
     last = new Date(first + SECONDS_A_DAY * i).getTime();
     lastValue = firstValue + i;
-    await c.writeValue(master.db, lastValue, last);
+    await c.writeValue(master.context, lastValue, last);
   }
-  const ds = await c.getValue(master.db, first);
-  t.is((await c.getValue(master.db, first)).toString(), "77.34");
-  await c.deleteValue(master.db, first);
+  const ds = await c.getValue(master.context, first);
+  t.is((await c.getValue(master.context, first)).toString(), "77.34");
+  await c.deleteValue(master.context, first);
 
-  t.is(await c.getValue(master.db, first), undefined);
+  t.is(await c.getValue(master.context, first), undefined);
 
   await master.close();
 });

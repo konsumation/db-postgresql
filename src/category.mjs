@@ -38,11 +38,11 @@ export class PostgresCategory extends Category {
     return sql`DELETE FROM category WHERE id=${this.id}`;
   }
 
-  async addMeter(db) {}
+  async addMeter(db) { }
 
-  async deleteMeter(db) {}
+  async deleteMeter(db) { }
 
-  async allMeters(db) {}
+  async allMeters(db) { }
 
   async getActiveMeter(db) {
     const getActiveMeterSql = `select id from meter where categoryname='${this.name}' and validfrom = ( select max(validfrom) from meter where categoryname='${this.name}')`;
@@ -63,15 +63,12 @@ export class PostgresCategory extends Category {
   }
 
   async getValue(db, time) {
-    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => {});
+    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => { });
   }
 
-  static async entry(db, name) {
-    const text = `select * from category where name='${name}'`;
-    const result = await db.query(text);
-    return new this({ name, ...result.rows[0] });
-    return result.rows.length > 0
-      ? new this(name, undefined, result.rows[0])
-      : undefined;
+  static async entry(sql, name) {
+    const result = await sql`select * from category ${name ? sql`where name=${name}` : sql``}`;
+    console.log(result)
+    return new this({ name, ...result[0] });
   }
 }
