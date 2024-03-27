@@ -36,8 +36,7 @@
     "@konsumation/model": "^1.8.0",
     "@types/node": "^20.11.30",
     "pacc": "^3.1.6",
-    "pg": "^8.11.3",
-    "pg-query-stream": "^4.5.3"
+    "postgres": "^3.4.4"
   },
   "devDependencies": {
     "@konsumation/db-test": "^1.4.0",

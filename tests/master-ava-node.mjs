@@ -1,13 +1,16 @@
 import test from "ava";
 import { Master } from "@konsumation/konsum-db-postgresql";
-import { createDatabase } from "./util.mjs";
+import { createSchema, dropSchema } from "./util.mjs";
 
-const url = process.env.POSTGRES_URL + `?currentSchema=myschema`;
+const SCHEMA = "konsum_test_1";
 
-test.before(async t => createDatabase(url));
+test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
+test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("initialize", async t => {
-  const master = await Master.initialize(url);
+  const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
+
+  t.truthy(master.context);
 
   const categories = [];
 
@@ -15,9 +18,8 @@ test("initialize", async t => {
     categories.push(c);
   }
 
-  t.truthy(master.db);
-
   t.deepEqual([], categories);
 
   await master.close();
+  t.is(master.context, undefined);
 });

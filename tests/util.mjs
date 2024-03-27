@@ -1,30 +1,24 @@
-import ConnectionString from "pg-connection-string";
-import pg from "pg";
+import postgres from "postgres";
 
-export async function createDatabase(url) {
-  const config = ConnectionString.parse(url);
-
-  const database = config.database;
-  config.database = 'postgres';
-
-  const db = new pg.Pool(config);
-
-  // https://phoenixnap.com/kb/postgresql-drop-database
-  for (const statement of [
-    `drop database if EXISTS ${database} WITH (FORCE)`,
-    `create database ${database}`
-  ]) {
-    try {
-      console.log(statement);
-      const result = await db.query(statement);
-      console.log(result);
-    } catch (err) {
-      console.log(err.message);
-      switch (err.code) {
-        case "42P04":
-      }
-    }
+export async function createSchema(url, name) {
+  try {
+    const sql = postgres(url);
+    await sql`DROP SCHEMA IF EXISTS ${sql(name)} CASCADE`;
+    await sql`CREATE SCHEMA ${sql(name)}`;
+    await sql.end();
+  } catch (e) {
+    console.log(e);
+    throw e;
   }
+}
 
-  await db.end();
+export async function dropSchema(url, name) {
+  try {
+    const sql = postgres(url);
+    await sql`DROP SCHEMA IF EXISTS ${sql(name)} CASCADE`;
+    await sql.end();
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 }

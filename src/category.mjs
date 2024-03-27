@@ -1,7 +1,6 @@
 import { Category } from "@konsumation/model";
 
 export class PostgresCategory extends Category {
-
   id;
   //TODO
   // DONE return id from insert and create this.id
@@ -11,45 +10,37 @@ export class PostgresCategory extends Category {
   // meter add and meter delete
   /**
    * Add category record to database.
-   * @param {*} db
+   * @param {*} sql
    * @returns
    */
-  async write(db) {
+  async write(sql) {
     //TODO check if columns are changed?
-    let text = "INSERT INTO category(name, description) VALUES($1, $2) RETURNING *";
-    let values = [this.name, this.description];
     if (this.id) {
-      text = `update category set name='${this.name}', description='${this.description}' where id=${this.id}`;
-      values = []
+      await sql`UPDATE category SET name=${this.name}, description=${this.description} WHERE id=${this.id}`;
+    } else {
+      this.id = (
+        await sql`INSERT INTO category ${sql(
+          this.attributeValues,
+          ...this.attributeNames
+        )} RETURNING id`
+      )[0].id;
     }
-    //TODO check result output from query and throw error if needed
-    const result = await db.query(text, values);
-    //console.log(result)
-    return this.id ? this.id : this.id = result.rows[0].id
   }
 
   /**
    * Delete record from database.
    * @param {pg} db
    */
-  async delete(db) {
-    const text = `delete from category where name='${this.name}' RETURNING *`;
-    //TODO check result output from query and throw error if needed
-    return db.query(text);
+  async delete(sql) {
+    return sql`DELETE FROM category WHERE id=${this.id}`;
   }
 
-  async addMeter(db){
+  async addMeter(db) {}
 
-  }
+  async deleteMeter(db) {}
 
-  async deleteMeter(db) {
+  async allMeters(db) {}
 
-  }
-
-  async allMeters(db) {
-
-  }
-  
   async getActiveMeter(db) {
     const getActiveMeterSql = `select id from meter where categoryname='${this.name}' and validfrom = ( select max(validfrom) from meter where categoryname='${this.name}')`;
     const answer = await db.query(getActiveMeterSql);
@@ -69,7 +60,7 @@ export class PostgresCategory extends Category {
   }
 
   async getValue(db, time) {
-    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => { });
+    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => {});
   }
 
   static async entry(db, name) {

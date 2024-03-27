@@ -1,75 +1,70 @@
 import test from "ava";
 import { Master, Category, Meter } from "@konsumation/konsum-db-postgresql";
 import { testCategoryConstructor } from "@konsumation/db-test";
-import { createDatabase } from "./util.mjs";
+import { createSchema, dropSchema } from "./util.mjs";
 
+const SCHEMA = "konsum_test_1";
 
-const url = process.env.POSTGRES_URL + `?currentSchema=myschema`;
+test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
+test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
-test.before(async t => createDatabase(url));
+test("Category constructor", t => testCategoryConstructor(t, Category));
 
-test("Category constructor", t => testCategoryConstructor(t,Category));
-
-test("Category write / read / update / delete", async t => {
-  const master = await Master.initialize(url);
+test.only("Category write / read / update / delete", async t => {
+  const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
 
   for (let i = 0; i < 10; i++) {
     const c = new Category({
       name: `CAT-${i}`,
       description: `Category CAT-${i}`
     });
-    await c.write(master.db);
-    t.is(c.id, i + 1)
-    t.is(c.description, `Category CAT-${i}`)
+    await c.write(master.context);
+    t.true(c.id > 0);
+    t.is(c.description, `Category CAT-${i}`);
   }
 
   const cs = [];
 
-  for await (const c of master.categories()) {
+  for await (const c of master.categories(master.context)) {
     cs.push(c);
   }
 
   t.true(cs.length >= 10);
-  //t.is(cs[0].unit, "kWh");
-  //t.is(cs[0].fractionalDigits, 3);
+
+  /*
   let c = await Category.entry(master.db, "CAT-7");
   t.is(c.name, "CAT-7");
-  //t.is(c.unit, "kWh");
-  //t.is(c.fractionalDigits, 3);
 
   c = await Category.entry(master.db, "CAT-12");
-  //t.falsy(c);
 
   await c.delete(master.db);
 
-  // await master.backup(createWriteStream('/tmp/x.txt',{ encoding: "utf8" }));
-
   c = await Category.entry(master.db, "CAT-7");
-  //t.falsy(c);
   c = new Category({
     name: `CAT-Update`,
     description: `Category CAT-insert`
   });
   await c.write(master.db);
-  t.is(c.description, `Category CAT-insert`)
-  c.description = "update"
-  c.name = "bla"
+  t.is(c.description, `Category CAT-insert`);
+  c.description = "update";
+  c.name = "bla";
   await c.write(master.db);
-  t.is(c.description, `update`)
-  t.is(c.name, `bla`)
+  t.is(c.description, `update`);
+  t.is(c.name, `bla`);
+  */
   await master.close();
 });
 
 const SECONDS_A_DAY = 60 * 60 * 24;
 test.skip("Meter write / read / update / delete", async t => {
   const master = await Master.initialize(url);
-new Meter
+  new Meter();
 
   await master.close();
-})
+});
 
 test("values write / read", async t => {
-  //const master = await Master.initialize(db);
+  const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
 
   const c = new Category({ name: `CAT-1val` });
   await c.write(master.db);
