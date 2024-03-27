@@ -37,6 +37,7 @@ export class PostgresMeter extends Meter {
     }
   }
 
+  //TODO where clause on primary key?
   static async entry(sql, name) {
     const result = await sql`select * from meter where name=${name}`;
     return new this({ name, ...result[0] });
