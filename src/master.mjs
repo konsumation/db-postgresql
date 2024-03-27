@@ -56,7 +56,6 @@ export class PostgresMaster extends Master {
       }
     }
 
-    console.log("Version", version);
     if (version !== VERSION) {
       throw new Error(`Unsupported schema version: ${version}`);
     }
