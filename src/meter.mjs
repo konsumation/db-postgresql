@@ -5,6 +5,13 @@ export class PostgresMeter extends Meter {
     return { fractionalDigits: "fractional_digits", validFrom: "valid_from" };
   }
 
+  static get attributes() {
+    return {
+      ...super.attributes,
+      id: this.id, categoryid: this.categoryid
+    };
+  }
+
   get primaryKeyAttributeValues() {
     return { id: this.id };
   }
