@@ -2,6 +2,15 @@ import { Category } from "@konsumation/model";
 
 export class PostgresCategory extends Category {
   id;
+
+  get primaryKeyAttributeValues() {
+    return { id: this.id };
+  }
+
+  get primaryKeyAttributeNames() {
+    return ['id'];
+  }
+
   //TODO
   // DONE return id from insert and create this.id
   // DONE write insert or update values...
@@ -20,37 +29,32 @@ export class PostgresCategory extends Category {
     const names = Object.keys(values);
 
     if (this.id) {
-      await sql`UPDATE category SET ${sql(
-        values,
-        ...names
-      )} WHERE id=${this.id}`;
+      await sql`UPDATE category SET ${sql(values, ...names)} WHERE ${sql(this.primaryKeyAttributeValues, ...this.primaryKeyAttributeNames)}`;
     } else {
       this.id = (
-        await sql`INSERT INTO category ${sql(
-          values,
-          ...names
-        )} RETURNING id`
+        await sql`INSERT INTO category ${sql(values, ...names)} RETURNING id`
       )[0].id;
     }
   }
 
   /**
    * Delete record from database.
-   * @param {pg} db
+   * @param {*} sql
    */
   async delete(sql) {
-    if (this.id) { return sql`DELETE FROM category WHERE id=${this.id}` };
-
+    if (this.id) {
+      return sql`DELETE FROM category WHERE ${sql(this.primaryKeyAttributeValues, ...this.primaryKeyAttributeNames)}`;
+    }
   }
 
-  async addMeter(db) { }
+  async addMeter(db) {}
 
-  async deleteMeter(db) { }
+  async deleteMeter(db) {}
 
-  async allMeters(db) { }
+  async allMeters(db) {}
 
   async getActiveMeter(db) {
-    const getActiveMeterSql = `select id from meter where categoryname='${this.name}' and validfrom = ( select max(validfrom) from meter where categoryname='${this.name}')`;
+    const getActiveMeterSql = `select id from meter where categoryname='${this.name}' and valid_from = ( select max(valid_from) from meter where categoryname='${this.name}')`;
     const answer = await db.query(getActiveMeterSql);
     return answer.rows[0];
   }
@@ -68,7 +72,7 @@ export class PostgresCategory extends Category {
   }
 
   async getValue(db, time) {
-    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => { });
+    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => {});
   }
 
   static async entry(sql, name) {
