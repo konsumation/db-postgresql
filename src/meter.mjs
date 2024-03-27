@@ -54,4 +54,21 @@ export class PostgresMeter extends Meter {
       )}`;
     }
   }
+
+    /**
+   * Write a time/value pair.
+   */
+    async writeValue(context, value, time) {
+      const insertValue =
+        "INSERT INTO values(value, meter, time) VALUES ($1,$2,$3) RETURNING id";
+      const obj = {
+        value,
+        meter: this.id,
+        time
+      }
+      console.log(obj)
+      const columns=['value', 'meter', 'time']
+      const result = await context`INSERT INTO values ${context(obj, columns)} RETURNING *`;
+      console.log(result)
+    }
 }

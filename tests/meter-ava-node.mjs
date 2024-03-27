@@ -36,7 +36,7 @@ test("Meter add / delete / update", async t => {
   t.is(c.id, 1)
   await m.write(master.context, c);
   t.is(m.id, 1);
-
+  await m.writeValue(master.context, 234, new Date())
 
 
   await master.close();
