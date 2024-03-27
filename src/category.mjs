@@ -3,6 +3,15 @@ import { Meter } from "@konsumation/konsum-db-postgresql";
 
 export class PostgresCategory extends Category {
   id;
+
+  get primaryKeyAttributeValues() {
+    return { id: this.id };
+  }
+
+  get primaryKeyAttributeNames() {
+    return ['id'];
+  }
+
   //TODO
   // DONE return id from insert and create this.id
   // DONE write insert or update values...
@@ -21,8 +30,7 @@ export class PostgresCategory extends Category {
     const names = Object.keys(values);
 
     if (this.id) {
-      await sql`UPDATE category SET ${sql(values, ...names)} WHERE id=${this.id
-        }`;
+      await sql`UPDATE category SET ${sql(values, ...names)} WHERE ${sql(this.primaryKeyAttributeValues, ...this.primaryKeyAttributeNames)}`;
     } else {
       this.id = (
         await sql`INSERT INTO category ${sql(values, ...names)} RETURNING id`
@@ -32,7 +40,7 @@ export class PostgresCategory extends Category {
 
   /**
    * Delete record from database.
-   * @param {pg} db
+   * @param {*} sql
    */
   async delete(sql) {
     if (this.id) {
@@ -87,7 +95,7 @@ export class PostgresCategory extends Category {
   }
 
   async getValue(db, time) {
-    return db.get(this.valueKey(time), { asBuffer: false }).catch((err) => { });
+    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => {});
   }
 
   static async entry(sql, name) {
