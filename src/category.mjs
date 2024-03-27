@@ -72,7 +72,7 @@ export class PostgresCategory extends Category {
   }
 
   static async entry(sql, name) {
-    const result = await sql`select * from category ${name ? sql`where name=${name}` : sql``}`;
+    const result = await sql`select * from category where name=${name}`;
     return new this({ name, ...result[0] });
   }
 }
