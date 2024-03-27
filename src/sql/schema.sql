@@ -35,6 +35,17 @@ values
         date TIMESTAMP NOT NULL
     );
 
+CREATE TABLE note (
+    date TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    meter INT NOT NULL REFERENCES meter (id),
+    description VARCHAR(80)
+);
+
+ALTER TABLE
+    note
+ADD
+    CONSTRAINT pk_note PRIMARY KEY (date, meter);
+
 CREATE TABLE version (
     schema_version VARCHAR(50) NOT NULL,
     migrated TIMESTAMP NOT NULL DEFAULT current_timestamp

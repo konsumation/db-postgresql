@@ -5,12 +5,12 @@ export class PostgresNote extends Note {
     const values = this.attributeValues;
     const names = Object.keys(values);
 
-    if (this.id) {
-      await sql`UPDATE note SET ${sql(values, ...names)} WHERE id=${this.id}`;
+    if (this.time) {
+      await sql`UPDATE note SET ${sql(values, ...names)} WHERE date=${this.time}`;
     } else {
       this.id = (
-        await sql`INSERT INTO note ${sql(values, ...names)} RETURNING id`
-      )[0].id;
+        await sql`INSERT INTO note ${sql(values, ...names)} RETURNING date`
+      )[0].time;
     }
   }
 }
