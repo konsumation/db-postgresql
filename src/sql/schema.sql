@@ -15,9 +15,13 @@ CREATE TABLE meter (
     fractionalDigits INT,
     validfrom DATE,
     lastmodified TIMESTAMP,
-    FOREIGN KEY (categoryid) REFERENCES category (id));
+    FOREIGN KEY (categoryid) REFERENCES category (id)
+);
 
-alter table meter add constraint pk_meter primary key (serial, categoryid);
+ALTER TABLE
+    meter
+ADD
+    CONSTRAINT pk_meter PRIMARY KEY (serial, categoryid);
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
 
