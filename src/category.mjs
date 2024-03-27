@@ -35,7 +35,8 @@ export class PostgresCategory extends Category {
    * @param {pg} db
    */
   async delete(sql) {
-    return sql`DELETE FROM category WHERE id=${this.id}`;
+    return this.id ? sql`DELETE FROM category WHERE id=${this.id}` : "no entry exists";
+
   }
 
   async addMeter(db) { }

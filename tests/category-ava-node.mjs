@@ -49,7 +49,7 @@ test("Category write / read / update / delete", async t => {
   c = await Category.entry(master.context, "CAT-12");
   t.is(c.name, `CAT-12`);
   t.is(c.description, undefined)
-  //await c.delete(master.context);
+  await c.delete(master.context);
 
   await master.close();
 });
