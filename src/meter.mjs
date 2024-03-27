@@ -1,8 +1,8 @@
 import { Meter } from "@konsumation/model";
 
 export class PostgresMeter extends Meter {
-  async write(sql) {
-    const values = this.attributeValues;
+  async write(sql, categoryid) {
+    const values = { categoryid, ...this.attributeValues };
     const names = Object.keys(values);
 
     if (this.id) {
