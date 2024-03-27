@@ -1,10 +1,12 @@
 import { Master } from "@konsumation/model";
 import { PostgresCategory } from "./category.mjs";
 import { PostgresMeter } from "./meter.mjs";
+import { PostgresNote } from "./note.mjs";
 import postgres from "postgres";
-export { PostgresCategory as Category };
-export { PostgresMeter as Meter };
 export { PostgresMaster as Master };
+export { PostgresMeter as Meter };
+export { PostgresCategory as Category };
+export { PostgresNote as Note };
 
 const VERSION = "1";
 
