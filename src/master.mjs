@@ -1,8 +1,8 @@
+import postgres from "postgres";
 import { Master } from "@konsumation/model";
 import { PostgresCategory } from "./category.mjs";
 import { PostgresMeter } from "./meter.mjs";
 import { PostgresNote } from "./note.mjs";
-import postgres from "postgres";
 export { PostgresMaster as Master };
 export { PostgresMeter as Meter };
 export { PostgresCategory as Category };
@@ -36,20 +36,22 @@ export class PostgresMaster extends Master {
     try {
       version = await readVersion();
     } catch (e) {
-      //console.log(e);
-
-      // undefined_table https://www.postgresql.org/docs/current/errcodes-appendix.html
-      if (e.code === "42P01") {
-        try {
-          const result = await context.file(
-            new URL("sql/schema.sql", import.meta.url).pathname
-          );
-          version = await readVersion();
-        } catch (e) {
+      switch (e.code) {
+        // undefined_table https://www.postgresql.org/docs/current/errcodes-appendix.html
+        case "42P01":
+          {
+            try {
+              const result = await context.file(
+                new URL("sql/schema.sql", import.meta.url).pathname
+              );
+              version = await readVersion();
+            } catch (e) {
+              console.log(e);
+            }
+          }
+          break;
+        default:
           console.log(e);
-        }
-
-        //  console.log(context);
       }
     }
 
@@ -58,10 +60,13 @@ export class PostgresMaster extends Master {
       throw new Error(`Unsupported schema version: ${version}`);
     }
 
-    const master = new PostgresMaster();
-    master.context = context;
-    master.schemaVersion = version;
-    return master;
+    return new PostgresMaster(context, version);
+  }
+
+  constructor(context, version) {
+    super();
+    this.context = context;
+    this.schemaVersion = version;
   }
 
   /**
