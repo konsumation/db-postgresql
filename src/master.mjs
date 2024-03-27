@@ -3,6 +3,7 @@ import { Master } from "@konsumation/model";
 import { PostgresCategory } from "./category.mjs";
 import { PostgresMeter } from "./meter.mjs";
 import { PostgresNote } from "./note.mjs";
+import { getSchema } from "./util.mjs";
 export { PostgresMaster as Master };
 export { PostgresMeter as Meter };
 export { PostgresCategory as Category };
@@ -21,7 +22,7 @@ export class PostgresMaster extends Master {
 
   static async initialize(url, schema) {
     const context = postgres(url, {
-      connection: { search_path: schema }
+      connection: { search_path: getSchema(url, schema) }
     });
 
     const readVersion = async () =>

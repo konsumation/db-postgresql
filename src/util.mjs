@@ -64,3 +64,23 @@ export async function executeStatements(client, chunks, properties) {
     throw "TODO";
   }
 }
+
+/**
+ * Extract schema name from postgres url
+ * @param {string} url
+ * @param {string?} schema
+ * @returns {string?}
+ */
+export function getSchema(url, schema) {
+  if (!schema) {
+    const u = new URL(url);
+
+    if (u.searchParams?.has("options")) {
+      const m = u.searchParams.get("options")?.match(/search_path=(\w+)/);
+      if (m) {
+        schema = m[1];
+      }
+    }
+  }
+  return schema;
+}
