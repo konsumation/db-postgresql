@@ -33,10 +33,11 @@ test("Meter add / delete / update", async t => {
     description: `Category CAT-insert`
   });
   await c.write(master.context);
-  t.is(c.id,1)
-  await m.write(master.context,c);
+  t.is(c.id, 1)
+  await m.write(master.context, c);
+  t.is(m.id, 1);
 
-  
+
 
   await master.close();
 });
