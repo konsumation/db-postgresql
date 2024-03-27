@@ -85,4 +85,12 @@ export class PostgresMaster extends Master {
       yield new PostgresCategory(row);
     }
   }
+
+  async fromText(input) {
+    return super.fromText(input, [
+      PostgresCategory,
+      PostgresMeter,
+      PostgresNote
+    ]);
+  }
 }

@@ -1,4 +1,6 @@
 import test from "ava";
+import { createReadStream } from "node:fs";
+
 import { Master } from "@konsumation/konsum-db-postgresql";
 import { createSchema, dropSchema } from "./util.mjs";
 
@@ -22,4 +24,19 @@ test("initialize", async t => {
 
   await master.close();
   t.is(master.context, undefined);
+});
+
+test.skip("restore", async t => {
+  const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
+  const { category } = await master.fromText(
+    createReadStream(
+      new URL(
+        "../node_modules/@konsumation/db-test/src/fixtures/database-version-2.txt",
+        import.meta.url
+      ).pathname,
+      "utf8"
+    )
+  );
+
+  t.is(category, 3);
 });
