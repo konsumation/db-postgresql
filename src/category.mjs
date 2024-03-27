@@ -1,4 +1,5 @@
 import { Category } from "@konsumation/model";
+import { Meter } from "@konsumation/konsum-db-postgresql";
 
 export class PostgresCategory extends Category {
   id;
@@ -20,16 +21,11 @@ export class PostgresCategory extends Category {
     const names = Object.keys(values);
 
     if (this.id) {
-      await sql`UPDATE category SET ${sql(
-        values,
-        ...names
-      )} WHERE id=${this.id}`;
+      await sql`UPDATE category SET ${sql(values, ...names)} WHERE id=${this.id
+        }`;
     } else {
       this.id = (
-        await sql`INSERT INTO category ${sql(
-          values,
-          ...names
-        )} RETURNING id`
+        await sql`INSERT INTO category ${sql(values, ...names)} RETURNING id`
       )[0].id;
     }
   }
@@ -39,36 +35,59 @@ export class PostgresCategory extends Category {
    * @param {pg} db
    */
   async delete(sql) {
-    if (this.id) { return sql`DELETE FROM category WHERE id=${this.id}` };
-
+    if (this.id) {
+      return sql`DELETE FROM category WHERE id=${this.id}`;
+    }
   }
 
-  async addMeter(db) { }
+  async addMeter(sql, meter) {
+    if (this.id) { return await meter.write(sql, this.id); }
+  }
 
-  async deleteMeter(db) { }
+  async deleteMeter(sql) { }
 
-  async allMeters(db) { }
+  async *meters(context) {
+    for await (const [
+      row
+    ] of context`SELECT * FROM meter`.cursor()) {
+      yield new Meter(row);
+    }
+  }
 
-  async getActiveMeter(db) {
+  /* use from extended vlass
+  async getActiveMeter(sql) {
     const getActiveMeterSql = `select id from meter where categoryname='${this.name}' and validfrom = ( select max(validfrom) from meter where categoryname='${this.name}')`;
     const answer = await db.query(getActiveMeterSql);
     return answer.rows[0];
   }
+  */
+
   /**
    * Write a time/value pair.
    */
-  async writeValue(db, value, time) {
+  async writeValue(context, value, time) {
     const insertValue =
       "INSERT INTO values(value, meter, time) VALUES ($1,$2,$3) RETURNING id";
-    const answer = await db.query(insertValue, [
+    const obj = {
       value,
-      await this.getActiveMeter(db),
+      meter: await this.activeMeter(context).id,
       time
+    }
+    console.log(obj)
+    const columns=['value', 'meter', 'time']
+    const result = await context`INSERT INTO values ${context(obj, columns)} RETURNING *`;
+    console.log(result)
+    /*
+    .query(insertValue, [
+      value,
+      await this.activeMeter(context),
+      time,
     ]);
+    */
   }
 
   async getValue(db, time) {
-    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => { });
+    return db.get(this.valueKey(time), { asBuffer: false }).catch((err) => { });
   }
 
   static async entry(sql, name) {

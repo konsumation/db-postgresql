@@ -62,12 +62,21 @@ test.skip("Meter write / read / update / delete", async t => {
   await master.close();
 });
 
-test.skip("values write / read", async t => {
+test.only("values write / read", async t => {
   const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
 
   const c = new Category({ name: `CAT-1val` });
   await c.write(master.context);
 
+  const m = new Meter({
+    serial: "12345",
+    description: `meter for category CAT1val`,
+    unit: "kwh",
+    fractionalDigits: 2,
+    validFrom: new Date(),
+  });
+
+  await m.write(master.context, c)
   const first = Date.now();
   const firstValue = 77.34;
   let last = first;
