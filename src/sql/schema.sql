@@ -7,16 +7,17 @@ CREATE TABLE category (
 );
 
 CREATE TABLE meter (
-    id SERIAL PRIMARY KEY,
-    meterserial VARCHAR(100),
-    categoryid INT NOT NULL,
+    id SERIAL UNIQUE,
+    serial VARCHAR(100) NOT NULL,
+    categoryid INT,
     description VARCHAR(80),
     unit VARCHAR(10),
     fractionalDigits INT,
     validfrom DATE,
     lastmodified TIMESTAMP,
-    FOREIGN KEY (categoryid) REFERENCES category (id)
-);
+    FOREIGN KEY (categoryid) REFERENCES category (id));
+
+alter table meter add constraint pk_meter primary key (serial, categoryid);
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
 
