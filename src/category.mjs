@@ -16,7 +16,7 @@ export class PostgresCategory extends Category {
   async write(sql) {
     //TODO check if columns are changed?
     if (this.id) {
-      await sql`UPDATE category SET $${sql(
+      await sql`UPDATE category SET ${sql(
         this.attributeValues,
         ...this.attributeNames
       )} WHERE id=${this.id}`;
