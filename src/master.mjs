@@ -15,18 +15,16 @@ const VERSION = "1";
  * @property {string} schemaVersion
  */
 export class PostgresMaster extends Master {
-  db;
+  context;
 
   static async initialize(url, schema) {
-    const db = postgres(url, {
+    const context = postgres(url, {
       connection: { search_path: schema }
     });
 
-    async function readVersion() {
-      const result =
-        await db`SELECT schemaversion FROM version ORDER BY migrated`;
-      return result[0].schemaversion;
-    }
+    const readVersion = async () =>
+      (await context`SELECT schemaversion FROM version ORDER BY migrated`)[0]
+        .schemaversion;
 
     /**
      * get meta info like schema version
@@ -41,7 +39,7 @@ export class PostgresMaster extends Master {
       // undefined_table https://www.postgresql.org/docs/current/errcodes-appendix.html
       if (e.code === "42P01") {
         try {
-          const result = await db.file(
+          const result = await context.file(
             new URL("sql/schema.sql", import.meta.url).pathname
           );
           version = await readVersion();
@@ -49,8 +47,7 @@ export class PostgresMaster extends Master {
           console.log(e);
         }
 
-        //  console.log("migration executed");
-        //  console.log(db);
+        //  console.log(context);
       }
     }
 
@@ -60,8 +57,7 @@ export class PostgresMaster extends Master {
     }
 
     const master = new PostgresMaster();
-    master.db = db;
-    master.context = db;
+    master.context = context;
     master.schemaVersion = version;
     return master;
   }
@@ -75,7 +71,9 @@ export class PostgresMaster extends Master {
   }
 
   async *categories(context) {
-    for await (const [row] of context`SELECT name,description FROM category`.cursor()) {
+    for await (const [
+      row
+    ] of context`SELECT name,description FROM category`.cursor()) {
       yield new PostgresCategory(row);
     }
   }
