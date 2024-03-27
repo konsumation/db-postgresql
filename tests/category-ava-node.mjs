@@ -31,16 +31,6 @@ test("Category write / read / update / delete", async t => {
 
   t.true(cs.length >= 10);
 
-  /*
-  let c = await Category.entry(master.context, "CAT-7");
-  t.is(c.name, "CAT-7");
-
-  c = await Category.entry(master.context, "CAT-12");
-
-  await c.delete(master.context);
-
-  c = await Category.entry(master.context, "CAT-7");
-  */
   let c = new Category({
     name: `CAT-Update`,
     description: `Category CAT-insert`
@@ -55,7 +45,12 @@ test("Category write / read / update / delete", async t => {
 
   t.is(c.description, `update`);
   t.is(c.name, `bla`);
-  
+
+  c = await Category.entry(master.context, "CAT-12");
+  t.is(c.name, `CAT-12`);
+  t.is(c.description, undefined)
+  //await c.delete(master.context);
+
   await master.close();
 });
 
