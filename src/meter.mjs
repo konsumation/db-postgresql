@@ -1,6 +1,10 @@
 import { Meter } from "@konsumation/model";
 
 export class PostgresMeter extends Meter {
+  static get attributeNameMapping() {
+    return { fractionalDigits: "fractional_digits", validFrom: "valid_from" };
+  }
+
   async write(sql, categoryid) {
     const values = { categoryid, ...this.attributeValues };
     const names = Object.keys(values);

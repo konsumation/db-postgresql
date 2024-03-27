@@ -12,8 +12,8 @@ CREATE TABLE meter (
     categoryid INT,
     description VARCHAR(80),
     unit VARCHAR(10),
-    fractionalDigits INT,
-    validfrom DATE,
+    fractional_digits INT,
+    valid_from DATE,
     lastmodified TIMESTAMP,
     FOREIGN KEY (categoryid) REFERENCES category (id)
 );
@@ -25,7 +25,7 @@ ADD
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
 
-COMMENT ON COLUMN meter.fractionaldigits IS 'display precission';
+COMMENT ON COLUMN meter.fractional_digits IS 'display precission';
 
 CREATE TABLE
 values
@@ -36,11 +36,11 @@ values
     );
 
 CREATE TABLE version (
-    schemaversion VARCHAR(50) NOT NULL,
+    schema_version VARCHAR(50) NOT NULL,
     migrated TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
 insert into
-    version (schemaversion)
+    version (schema_version)
 values
     ('1');

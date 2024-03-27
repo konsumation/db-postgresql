@@ -4,7 +4,7 @@ import { createReadStream } from "node:fs";
 import { Master } from "@konsumation/konsum-db-postgresql";
 import { createSchema, dropSchema } from "./util.mjs";
 
-const SCHEMA = "konsum_test_1";
+const SCHEMA = "konsum_master_test";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));

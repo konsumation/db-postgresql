@@ -26,8 +26,8 @@ export class PostgresMaster extends Master {
     });
 
     const readVersion = async () =>
-      (await context`SELECT schemaversion FROM version ORDER BY migrated`)[0]
-        .schemaversion;
+      (await context`SELECT schema_version FROM version ORDER BY migrated`)[0]
+        .schema_version;
 
     /**
      * get meta info like schema version
