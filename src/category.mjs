@@ -15,16 +15,20 @@ export class PostgresCategory extends Category {
    */
   async write(sql) {
     //TODO check if columns are changed?
+
+    const values = this.attributeValues;
+    const names = Object.keys(values);
+
     if (this.id) {
       await sql`UPDATE category SET ${sql(
-        this.attributeValues,
-        ...this.attributeNames
+        values,
+        ...names
       )} WHERE id=${this.id}`;
     } else {
       this.id = (
         await sql`INSERT INTO category ${sql(
-          this.attributeValues,
-          ...this.attributeNames
+          values,
+          ...names
         )} RETURNING id`
       )[0].id;
     }
