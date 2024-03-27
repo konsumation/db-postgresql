@@ -85,13 +85,6 @@ export class PostgresCategory extends Category {
     const columns=['value', 'meter', 'time']
     const result = await context`INSERT INTO values ${context(obj, columns)} RETURNING *`;
     console.log(result)
-    /*
-    .query(insertValue, [
-      value,
-      await this.activeMeter(context),
-      time,
-    ]);
-    */
   }
 
   async getValue(db, time) {
