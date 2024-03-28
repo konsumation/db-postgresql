@@ -15,7 +15,7 @@ test("Meter constructor", t =>
     valid_from: new Date()
   }));
 
-test("Meter add / delete / update", async t => {
+test.only("Meter add / delete / update", async t => {
   const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
 
   const category = new Category({
@@ -41,6 +41,15 @@ test("Meter add / delete / update", async t => {
 
   await meter.write(master.context);
   t.true(meter.id > 0);
+  let c = new Category({
+    name: `CAT-Update`,
+    description: `Category CAT-insert`
+  });
+  await c.write(master.context);
+  t.is(c.id, 1)
+  await m.write(master.context, c);
+  t.is(m.id, 1);
+  await m.writeValue(master.context, 234, "22.01.2098")
 
   /*
   await m.writeValue(master.context, 234, new Date())
