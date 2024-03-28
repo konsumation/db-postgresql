@@ -13,7 +13,8 @@ const SCHEMA = "konsum_note_test";
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
-test("Note constructor", t => testNoteConstructor(t, Note));
+test("Note constructor", t =>
+  testNoteConstructor(t, Note, { date: new Date() }));
 
 test("Note add / delete / update", async t => {
   const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
@@ -41,6 +42,9 @@ test("Note add / delete / update", async t => {
     date: new Date(),
     description: "note for meter 12345"
   });
+
+  t.is(note.meter, meter);
+  t.is(note.meter.id, 1);
   await note.write(master.context);
 
   await master.close();

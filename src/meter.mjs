@@ -5,6 +5,7 @@ export class PostgresMeter extends Meter {
     return {
       fractionalDigits: "fractional_digits",
       validFrom: "valid_from",
+      category: null,
       "category.id": "category_id"
     };
   }
@@ -12,7 +13,7 @@ export class PostgresMeter extends Meter {
   static get attributes() {
     return {
       ...super.attributes,
-      id,
+      id
     };
   }
 
@@ -21,9 +22,7 @@ export class PostgresMeter extends Meter {
   }
 
   async write(sql) {
-    const values = { category_id: this.category?.id, ...this.attributeValues };
-    delete values.category; // TODO
-
+    const values = this.attributeValues;
     const names = Object.keys(values);
 
     if (this.id) {
@@ -54,22 +53,25 @@ export class PostgresMeter extends Meter {
   }
 
   /**
- * Write a time/value pair.
- */
+   * Write a time/value pair.
+   */
   async writeValue(context, value, date) {
     const obj = {
       value,
       meter_id: this.id,
       date
     };
-    console.log(obj)
-    const columns = ['value', 'meter_id', 'date'];
+    console.log(obj);
+    const columns = ["value", "meter_id", "date"];
     try {
-    const result = await context`INSERT INTO "values" ${context(obj,columns)} RETURNING *`;
-  } catch (e) {
-    console.log(e.query)
-    throw(e)
-  }
-   // console.log(result)
+      const result = await context`INSERT INTO "values" ${context(
+        obj,
+        columns
+      )} RETURNING *`;
+    } catch (e) {
+      console.log(e.query);
+      throw e;
+    }
+    // console.log(result)
   }
 }
