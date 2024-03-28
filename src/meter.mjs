@@ -8,16 +8,13 @@ export class PostgresMeter extends Meter {
   static get attributes() {
     return {
       ...super.attributes,
-      id: this.id, categoryid: this.categoryid
+      id: this.id,
+      categoryid: this.categoryid
     };
   }
 
-  get primaryKeyAttributeValues() {
-    return { id: this.id };
-  }
-
-  get primaryKeyAttributeNames() {
-    return ["id"];
+  primaryKeyExpression(sql) {
+    return sql({ id: this.id }, "id");
   }
 
   async write(sql, category) {
@@ -26,10 +23,10 @@ export class PostgresMeter extends Meter {
     const names = Object.keys(values);
 
     if (this.id) {
-      await sql`UPDATE meter SET ${sql(values, ...names)} WHERE ${sql(
-        this.primaryKeyAttributeValues,
-        ...this.primaryKeyAttributeNames
-      )}`;
+      await sql`UPDATE meter SET ${sql(
+        values,
+        ...names
+      )} WHERE ${this.primaryKeyExpression(sql)}`;
     } else {
       this.id = (
         await sql`INSERT INTO meter ${sql(values, ...names)} RETURNING id`
@@ -48,27 +45,27 @@ export class PostgresMeter extends Meter {
    */
   async delete(sql) {
     if (this.id) {
-      return sql`DELETE FROM meter WHERE ${sql(
-        this.primaryKeyAttributeValues,
-        ...this.primaryKeyAttributeNames
-      )}`;
+      return sql`DELETE FROM meter WHERE ${this.primaryKeyExpression(sql)}`;
     }
   }
 
-    /**
+  /**
    * Write a time/value pair.
    */
-    async writeValue(context, value, time) {
-      const insertValue =
-        "INSERT INTO values(value, meter, time) VALUES ($1,$2,$3) RETURNING id";
-      const obj = {
-        value,
-        meter: this.id,
-        time
-      }
-      console.log(obj)
-      const columns=['value', 'meter', 'time']
-      const result = await context`INSERT INTO values ${context(obj, columns)} RETURNING *`;
-      console.log(result)
-    }
+  async writeValue(context, value, time) {
+    const insertValue =
+      "INSERT INTO values(value, meter, time) VALUES ($1,$2,$3) RETURNING id";
+    const obj = {
+      value,
+      meter: this.id,
+      time
+    };
+    console.log(obj);
+    const columns = ["value", "meter", "time"];
+    const result = await context`INSERT INTO values ${context(
+      obj,
+      columns
+    )} RETURNING *`;
+    console.log(result);
+  }
 }

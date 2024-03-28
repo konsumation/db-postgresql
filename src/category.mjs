@@ -4,12 +4,8 @@ import { Meter } from "@konsumation/konsum-db-postgresql";
 export class PostgresCategory extends Category {
   id;
 
-  get primaryKeyAttributeValues() {
-    return { id: this.id };
-  }
-
-  get primaryKeyAttributeNames() {
-    return ['id'];
+  primaryKeyExpression(sql) {
+    return sql({ id: this.id }, "id");
   }
 
   //TODO
@@ -30,7 +26,10 @@ export class PostgresCategory extends Category {
     const names = Object.keys(values);
 
     if (this.id) {
-      await sql`UPDATE category SET ${sql(values, ...names)} WHERE ${sql(this.primaryKeyAttributeValues, ...this.primaryKeyAttributeNames)}`;
+      await sql`UPDATE category SET ${sql(
+        values,
+        ...names
+      )} WHERE ${this.primaryKeyExpression(sql)}`;
     } else {
       this.id = (
         await sql`INSERT INTO category ${sql(values, ...names)} RETURNING id`
@@ -44,20 +43,20 @@ export class PostgresCategory extends Category {
    */
   async delete(sql) {
     if (this.id) {
-      return sql`DELETE FROM category WHERE id=${this.id}`;
+      return sql`DELETE FROM category WHERE ${this.primaryKeyExpression(sql)}`;
     }
   }
 
   async addMeter(sql, meter) {
-    if (this.id) { return await meter.write(sql, this.id); }
+    if (this.id) {
+      return await meter.write(sql, this.id);
+    }
   }
 
-  async deleteMeter(sql) { }
+  async deleteMeter(sql) {}
 
   async *meters(context) {
-    for await (const [
-      row
-    ] of context`SELECT * FROM meter`.cursor()) {
+    for await (const [row] of context`SELECT * FROM meter`.cursor()) {
       yield new Meter(row);
     }
   }
@@ -80,11 +79,14 @@ export class PostgresCategory extends Category {
       value,
       meter: await this.activeMeter(context).id,
       time
-    }
-    console.log(obj)
-    const columns=['value', 'meter', 'time']
-    const result = await context`INSERT INTO values ${context(obj, columns)} RETURNING *`;
-    console.log(result)
+    };
+    console.log(obj);
+    const columns = ["value", "meter", "time"];
+    const result = await context`INSERT INTO values ${context(
+      obj,
+      columns
+    )} RETURNING *`;
+    console.log(result);
   }
 
   async getValue(db, time) {
