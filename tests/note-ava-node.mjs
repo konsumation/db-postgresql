@@ -38,7 +38,7 @@ test("Note add / delete / update", async t => {
 
   const note = new Note({
     meter,
-    time: new Date(),
+    date: new Date(),
     description: "note for meter 12345"
   });
   await note.write(master.context);
