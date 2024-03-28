@@ -46,7 +46,7 @@ test.only("Meter add / delete / update", async t => {
   t.is(c.id, 1)
   await meter.write(master.context, c);
   t.is(meter.id, 1);
-  await meter.writeValue(master.context, 234, "22.01.2098")
+  await meter.writeValue(master.context, 234, new Date())
 
   /*
   await m.writeValue(master.context, 234, new Date())

@@ -63,8 +63,13 @@ export class PostgresMeter extends Meter {
       date
     };
     console.log(obj)
-    const columns = ['value', 'meter', 'date']
-    const result = await context`INSERT INTO values ${context(obj,columns)} RETURNING *`;
-    console.log(result)
+    const columns = ['value', 'meter', 'date'];
+    try {
+    const result = await context`INSERT INTO "values" ${context(obj,columns)} RETURNING *`;
+  } catch (e) {
+    console.log(e.query)
+    throw(e)
+  }
+   // console.log(result)
   }
 }
