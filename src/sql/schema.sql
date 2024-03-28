@@ -42,8 +42,3 @@ CREATE TABLE version (
     schema_version VARCHAR(50) NOT NULL,
     migrated TIMESTAMP NOT NULL UNIQUE DEFAULT current_timestamp
 );
-
-INSERT INTO
-    version (schema_version)
-VALUES
-    ('1');

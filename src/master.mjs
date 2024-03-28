@@ -42,10 +42,15 @@ export class PostgresMaster extends Master {
         case "42P01":
           {
             try {
-              const result = await context.file(
+              await context.file(
                 new URL("sql/schema.sql", import.meta.url).pathname
               );
-              version = await readVersion();
+
+              await context`INSERT INTO version ${context(
+                { schema_version: VERSION },
+                ["schema_version"]
+              )}`;
+              version = VERSION;
             } catch (e) {
               console.log(e);
             }
