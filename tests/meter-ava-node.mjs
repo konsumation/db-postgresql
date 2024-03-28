@@ -26,7 +26,7 @@ test.only("Meter add / delete / update", async t => {
   t.true(c.id > 0);
 
   const values = {
-    c,
+    category:c,
     serial: "12345",
     description: `meter for category CAT1`,
     unit: "kwh",
@@ -37,17 +37,16 @@ test.only("Meter add / delete / update", async t => {
   const meter = new Meter(values);
 
   t.is(meter.fractionalDigits, 2);
-  //TODO fix
-  //t.is(meter.category, c);
+  t.is(meter.category, c);
 
   await meter.write(master.context);
   t.true(meter.id > 0);
 
   await c.write(master.context);
   t.is(c.id, 1)
-  await m.write(master.context, c);
-  t.is(m.id, 1);
-  await m.writeValue(master.context, 234, "22.01.2098")
+  await meter.write(master.context, c);
+  t.is(meter.id, 1);
+  await meter.writeValue(master.context, 234, "22.01.2098")
 
   /*
   await m.writeValue(master.context, 234, new Date())
