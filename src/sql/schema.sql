@@ -9,14 +9,14 @@ CREATE TABLE category (
 CREATE TABLE meter (
     id SERIAL UNIQUE,
     serial VARCHAR(100) NOT NULL,
-    categoryid INT,
+    category_id INT,
     description VARCHAR(80),
     unit VARCHAR(10),
     fractional_digits INT,
     valid_from DATE,
     lastmodified TIMESTAMP,
-    FOREIGN KEY (categoryid) REFERENCES category (id),
-    PRIMARY KEY (serial, categoryid)
+    FOREIGN KEY (category_id) REFERENCES category (id),
+    PRIMARY KEY (serial, category_id)
 );
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
@@ -27,7 +27,7 @@ CREATE TABLE
 values
     (
         value DECIMAL NOT NULL,
-        meter INT NOT NULL REFERENCES meter (id),
+        meter_id INT NOT NULL REFERENCES meter (id),
         date TIMESTAMP NOT NULL
     );
 

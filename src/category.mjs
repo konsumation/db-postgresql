@@ -61,7 +61,7 @@ export class PostgresCategory extends Category {
   async deleteMeter(sql) {}
 
   async *meters(context) {
-    for await (const [row] of context`SELECT * FROM meter WHERE categoryid=${this.id}`.cursor()) {
+    for await (const [row] of context`SELECT * FROM meter WHERE category_id=${this.id}`.cursor()) {
       row.category=this;
       yield new Meter(row);
     }
