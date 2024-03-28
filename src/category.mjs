@@ -1,8 +1,15 @@
-import { Category } from "@konsumation/model";
+import { Category, id } from "@konsumation/model";
 import { Meter } from "@konsumation/konsum-db-postgresql";
 
 export class PostgresCategory extends Category {
-  id;
+  //id;
+
+  static get attributes() {
+    return {
+      ...super.attributes,
+      id,
+    };
+  }
 
   primaryKeyExpression(sql) {
     return sql({ id: this.id }, "id");
@@ -48,15 +55,14 @@ export class PostgresCategory extends Category {
   }
 
   async addMeter(sql, meter) {
-    if (this.id) {
-      return await meter.write(sql, this.id);
-    }
+    meter.category = this;
   }
 
   async deleteMeter(sql) {}
 
   async *meters(context) {
-    for await (const [row] of context`SELECT * FROM meter`.cursor()) {
+    for await (const [row] of context`SELECT * FROM meter WHERE categoryid=${this.id}`.cursor()) {
+      row.category=this;
       yield new Meter(row);
     }
   }

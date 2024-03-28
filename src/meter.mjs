@@ -1,15 +1,18 @@
-import { Meter } from "@konsumation/model";
+import { Meter, id } from "@konsumation/model";
 
 export class PostgresMeter extends Meter {
   static get attributeNameMapping() {
-    return { fractionalDigits: "fractional_digits", validFrom: "valid_from" };
+    return {
+      fractionalDigits: "fractional_digits",
+      validFrom: "valid_from",
+      "category.id": "categoryid"
+    };
   }
 
   static get attributes() {
     return {
       ...super.attributes,
-      id: this.id,
-      categoryid: this.categoryid
+      id,
     };
   }
 
@@ -17,8 +20,9 @@ export class PostgresMeter extends Meter {
     return sql({ id: this.id }, "id");
   }
 
-  async write(sql, category) {
-    const values = { categoryid: category.id, ...this.attributeValues };
+  async write(sql) {
+    const values = { categoryid: this.category?.id, ...this.attributeValues };
+    delete values.category; // TODO
 
     const names = Object.keys(values);
 
