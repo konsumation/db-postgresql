@@ -15,13 +15,9 @@ CREATE TABLE meter (
     fractional_digits INT,
     valid_from DATE,
     lastmodified TIMESTAMP,
-    FOREIGN KEY (categoryid) REFERENCES category (id)
+    FOREIGN KEY (categoryid) REFERENCES category (id),
+    PRIMARY KEY (serial, categoryid)
 );
-
-ALTER TABLE
-    meter
-ADD
-    CONSTRAINT pk_meter PRIMARY KEY (serial, categoryid);
 
 COMMENT ON COLUMN meter.unit IS 'physical unit like kWh or m3';
 
@@ -38,20 +34,16 @@ values
 CREATE TABLE note (
     date TIMESTAMP NOT NULL DEFAULT current_timestamp,
     meter INT NOT NULL REFERENCES meter (id),
-    description VARCHAR(80)
+    description VARCHAR(80),
+    PRIMARY KEY (date, meter)
 );
-
-ALTER TABLE
-    note
-ADD
-    CONSTRAINT pk_note PRIMARY KEY (date, meter);
 
 CREATE TABLE version (
     schema_version VARCHAR(50) NOT NULL,
-    migrated TIMESTAMP NOT NULL DEFAULT current_timestamp
+    migrated TIMESTAMP NOT NULL UNIQUE DEFAULT current_timestamp
 );
 
-insert into
+INSERT INTO
     version (schema_version)
-values
+VALUES
     ('1');
