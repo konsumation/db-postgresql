@@ -13,7 +13,7 @@ CREATE TABLE meter (
     description VARCHAR(80),
     unit VARCHAR(10),
     fractional_digits INT,
-    valid_from DATE,
+    valid_from TIMESTAMP,
     lastmodified TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES category (id)
 );
