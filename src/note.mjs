@@ -4,7 +4,8 @@ export class PostgresNote extends Note {
 
   static get attributeNameMapping() {
     return {
-      "meter.id": "meter_id"
+      "meter.id": "meter_id",
+      "time": "date"
     };
   }
 
