@@ -31,7 +31,7 @@ test.skip("restore", async t => {
   const { category } = await master.fromText(
     createReadStream(
       new URL(
-        "../node_modules/@konsumation/db-test/src/fixtures/database-version-2.txt",
+        "../node_modules/@konsumation/db-test/src/fixtures/database-version-3.txt",
         import.meta.url
       ).pathname,
       "utf8"
