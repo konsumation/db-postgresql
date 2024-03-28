@@ -1,12 +1,21 @@
 import { Note } from "@konsumation/model";
 
 export class PostgresNote extends Note {
+
+  static get attributeNameMapping() {
+    return {
+      "meter.id": "meter_id"
+    };
+  }
+
   primaryKeyExpression(sql) {
     return sql({ date: this.time }, "date");
   }
 
   async write(sql) {
-    const values = this.attributeValues;
+    const values = { meter_id: this.meter?.id, ...this.attributeValues };
+    delete values.meter; // TODO
+
     const names = Object.keys(values);
 
     if (this.time) {

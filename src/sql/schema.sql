@@ -33,9 +33,9 @@ values
 
 CREATE TABLE note (
     date TIMESTAMP NOT NULL DEFAULT current_timestamp,
-    meter INT NOT NULL REFERENCES meter (id),
+    meter_id INT NOT NULL REFERENCES meter (id),
     description VARCHAR(80),
-    PRIMARY KEY (date, meter)
+    PRIMARY KEY (date, meter_id)
 );
 
 CREATE TABLE version (
