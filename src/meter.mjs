@@ -61,7 +61,6 @@ export class PostgresMeter extends Meter {
       meter_id: this.id,
       date
     };
-    console.log(obj);
     const columns = ["value", "meter_id", "date"];
     try {
       await context`INSERT INTO "values" ${context(obj, columns)}`;
