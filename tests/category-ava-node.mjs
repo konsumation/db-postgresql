@@ -48,7 +48,7 @@ test("Category write / read / update / delete", async t => {
 
   c = await Category.entry(master.context, "CAT-12");
   t.is(c.name, `CAT-12`);
-  t.is(c.description, undefined)
+  t.is(c.description, undefined);
   await c.delete(master.context);
 
   await master.close();
@@ -67,10 +67,10 @@ test.skip("values write / read", async t => {
     description: `meter for category CAT1val`,
     unit: "kwh",
     fractionalDigits: 2,
-    validFrom: new Date(),
+    validFrom: new Date()
   });
 
-  await m.write(master.context, c)
+  await m.write(master.context, c);
   const first = Date.now();
   const firstValue = 77.34;
   let last = first;
@@ -107,7 +107,6 @@ test.skip("values write / read", async t => {
 });
 
 test.skip("values delete", async t => {
-  const dbf = tmp.tmpNameSync();
   const master = await Postgres.initialize(db);
 
   const c = new Category(`CAT-2val`, master, { unit: "kWh" });
