@@ -10,6 +10,12 @@ export class PostgresCategory extends Category {
       id,
     };
   }
+  static get attributeNameMapping() {
+    return {
+      fractionalDigits: "fractional_digits",
+      validFrom: "valid_from"
+    };
+  }
 
   primaryKeyExpression(sql) {
     return sql({ id: this.id }, "id");

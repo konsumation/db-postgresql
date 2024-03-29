@@ -6,7 +6,7 @@ import { createSchema, dropSchema } from "./util.mjs";
 const SCHEMA = "konsum_test_1";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
-//test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
+test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("Category constructor", t => testCategoryConstructor(t, Category));
 
@@ -55,14 +55,8 @@ test("Category write / read / update / delete", async t => {
 });
 
 const SECONDS_A_DAY = 60 * 60 * 24;
-test.skip("Meter write / read / update / delete", async t => {
-  const master = await Master.initialize(url);
-  new Meter();
 
-  await master.close();
-});
-
-test.only("values write / read", async t => {
+test.skip("values write / read", async t => {
   const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
 
   const c = new Category({ name: `CAT-1val` });

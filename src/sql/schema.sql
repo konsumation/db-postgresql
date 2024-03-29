@@ -2,8 +2,10 @@ CREATE TABLE category (
     id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL UNIQUE,
     description VARCHAR(80),
+    unit VARCHAR(10),
+    fractional_digits INT NOT NULL DEFAULT 2,
     created TIMESTAMP NOT NULL DEFAULT current_timestamp,
-    lastmodified TIMESTAMP
+    last_modified TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
 CREATE TABLE meter (
@@ -14,7 +16,8 @@ CREATE TABLE meter (
     unit VARCHAR(10),
     fractional_digits INT,
     valid_from TIMESTAMP,
-    lastmodified TIMESTAMP,
+    created TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    last_modified TIMESTAMP NOT NULL DEFAULT current_timestamp,
     FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
