@@ -32,7 +32,7 @@ values
         value DECIMAL NOT NULL,
         meter_id INT NOT NULL REFERENCES meter (id),
         date TIMESTAMP NOT NULL,
-        PRIMARY KEY(meter_id,date)
+        PRIMARY KEY(meter_id, date)
     );
 
 CREATE TABLE note (
