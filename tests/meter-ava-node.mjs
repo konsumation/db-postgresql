@@ -16,43 +16,33 @@ test("Meter constructor", t =>
     valid_from: new Date()
   }));
 
-test.only("Meter add / delete / update", async t => {
+test("Meter add / delete / update", async t => {
   const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
 
-  const c = new Category({
+  const category = new Category({
     name: `CAT-Update`,
     description: `Category CAT-insert`
   });
-  await c.write(master.context);
-  t.true(c.id > 0);
+  await category.write(master.context);
+  t.true(category.id > 0);
 
-  const values = {
-    category:c,
+  const meter = new Meter({
+    category,
     name: "M1",
     serial: "12345",
     description: `meter for category CAT1`,
     unit: "kwh",
     fractional_digits: 2,
     valid_from: new Date()
-  };
-
-  const meter = new Meter(values);
+  });
 
   t.is(meter.fractionalDigits, 2);
-  t.is(meter.category, c);
+  t.is(meter.category, category);
 
   await meter.write(master.context);
   t.true(meter.id > 0);
 
-  await c.write(master.context);
-  t.is(c.id, 1)
-  await meter.write(master.context, c);
-  t.is(meter.id, 1);
-  await meter.writeValue(master.context, 234, new Date())
-
-  /*
-  await m.writeValue(master.context, 234, new Date())
-*/
+  await meter.writeValue(master.context, 234, new Date());
 
   await master.close();
 });

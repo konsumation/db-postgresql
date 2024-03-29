@@ -72,6 +72,5 @@ export class PostgresMeter extends Meter {
       console.log(e.query);
       throw e;
     }
-    // console.log(result)
   }
 }
