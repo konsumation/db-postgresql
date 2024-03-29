@@ -42,7 +42,7 @@ test("Meter add / delete / update", async t => {
   await meter.write(master.context);
   t.true(meter.id > 0);
 
-  await meter.writeValue(master.context, 234, new Date());
+  await meter.writeValue(master.context, new Date(), 234);
 
   await master.close();
 });

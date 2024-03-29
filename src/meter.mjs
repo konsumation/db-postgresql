@@ -55,7 +55,7 @@ export class PostgresMeter extends Meter {
   /**
    * Write a time/value pair.
    */
-  async writeValue(context, value, date) {
+  async writeValue(context, date, value) {
     const obj = {
       value,
       meter_id: this.id,
@@ -64,10 +64,7 @@ export class PostgresMeter extends Meter {
     console.log(obj);
     const columns = ["value", "meter_id", "date"];
     try {
-      const result = await context`INSERT INTO "values" ${context(
-        obj,
-        columns
-      )} RETURNING *`;
+      await context`INSERT INTO "values" ${context(obj, columns)}`;
     } catch (e) {
       console.log(e.query);
       throw e;
