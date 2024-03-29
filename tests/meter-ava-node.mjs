@@ -10,6 +10,7 @@ test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("Meter constructor", t =>
   testMeterConstructor(t, Meter, {
+    name: "M1",
     category: new Category({ name: "CAT-1" }),
     fractional_digits: 2,
     valid_from: new Date()
@@ -27,6 +28,7 @@ test.only("Meter add / delete / update", async t => {
 
   const values = {
     category:c,
+    name: "M1",
     serial: "12345",
     description: `meter for category CAT1`,
     unit: "kwh",

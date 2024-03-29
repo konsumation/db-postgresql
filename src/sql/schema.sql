@@ -10,7 +10,8 @@ CREATE TABLE category (
 
 CREATE TABLE meter (
     id SERIAL PRIMARY KEY,
-    serial VARCHAR(100) NOT NULL,
+    name VARCHAR(30) NOT NULL,
+    serial VARCHAR(100),
     category_id INT,
     description VARCHAR(80),
     unit VARCHAR(10),
@@ -30,14 +31,15 @@ values
     (
         value DECIMAL NOT NULL,
         meter_id INT NOT NULL REFERENCES meter (id),
-        date TIMESTAMP NOT NULL
+        date TIMESTAMP NOT NULL,
+        PRIMARY KEY(meter_id,date)
     );
 
 CREATE TABLE note (
-    date TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
     meter_id INT NOT NULL REFERENCES meter (id),
-    description VARCHAR(80),
-    PRIMARY KEY (date, meter_id)
+    description VARCHAR(80)
 );
 
 CREATE TABLE version (

@@ -14,7 +14,7 @@ test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("Note constructor", t =>
-  testNoteConstructor(t, Note, { date: new Date() }));
+  testNoteConstructor(t, Note, { }));
 
 test("Note add / delete / update", async t => {
   const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
@@ -28,6 +28,7 @@ test("Note add / delete / update", async t => {
 
   const meter = new Meter({
     category,
+    name: "M1",
     serial: "12345",
     description: "meter for category CAT1",
     unit: "kwh",
@@ -39,8 +40,8 @@ test("Note add / delete / update", async t => {
 
   const note = new Note({
     meter,
-    date: new Date(),
-    description: "note for meter 12345"
+    name: new Date().toISOString(),
+    description: "note for meter M1"
   });
 
   t.is(note.meter, meter);
