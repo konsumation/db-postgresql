@@ -1,6 +1,9 @@
 import { Category, id } from "@konsumation/model";
 import { Meter } from "@konsumation/konsum-db-postgresql";
 
+/**
+ * 
+ */
 export class PostgresCategory extends Category {
   //id;
 
@@ -80,30 +83,6 @@ export class PostgresCategory extends Category {
     return answer.rows[0];
   }
   */
-
-  /**
-   * Write a time/value pair.
-   */
-  async writeValue(context, value, time) {
-    const insertValue =
-      "INSERT INTO values(value, meter, time) VALUES ($1,$2,$3) RETURNING id";
-    const obj = {
-      value,
-      meter: await this.activeMeter(context).id,
-      time
-    };
-    console.log(obj);
-    const columns = ["value", "meter", "time"];
-    const result = await context`INSERT INTO values ${context(
-      obj,
-      columns
-    )} RETURNING *`;
-    console.log(result);
-  }
-
-  async getValue(db, time) {
-    return db.get(this.valueKey(time), { asBuffer: false }).catch(err => {});
-  }
 
   static async entry(sql, name) {
     const result = await sql`select * from category where name=${name}`;

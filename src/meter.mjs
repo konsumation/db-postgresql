@@ -1,5 +1,8 @@
 import { Meter, id } from "@konsumation/model";
 
+/**
+ * 
+ */
 export class PostgresMeter extends Meter {
   static get attributeNameMapping() {
     return {

@@ -1,5 +1,8 @@
 import { Note, id } from "@konsumation/model";
 
+/**
+ * 
+ */
 export class PostgresNote extends Note {
   static get attributeNameMapping() {
     return {

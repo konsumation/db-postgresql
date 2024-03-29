@@ -45,7 +45,7 @@ EXECUTE FUNCTION update_lastmodified();
  * Execute DML statements
  * @param {*} client
  * @param {AsyncIterable<string>} chunks
- * @param {object} properties key value pairs to replace
+ * @param {Object} properties key value pairs to replace
  */
 export async function executeStatements(client, chunks, properties) {
   try {
