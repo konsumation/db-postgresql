@@ -1,7 +1,7 @@
 import { Meter, id } from "@konsumation/model";
 
 /**
- * 
+ *
  */
 export class PostgresMeter extends Meter {
   static get attributeNameMapping() {
@@ -42,7 +42,7 @@ export class PostgresMeter extends Meter {
 
   //TODO where clause on primary key?
   static async entry(sql, name) {
-    const result = await sql`select * from meter where name=${name}`;
+    const result = await sql`SELECT * FROM meter WHERE name=${name}`;
     return new this({ name, ...result[0] });
   }
   /**
@@ -59,14 +59,17 @@ export class PostgresMeter extends Meter {
    * Write a time/value pair.
    */
   async writeValue(context, date, value) {
-    const obj = {
-      value,
-      meter_id: this.id,
-      date
-    };
-    const columns = ["value", "meter_id", "date"];
     try {
-      await context`INSERT INTO "values" ${context(obj, columns)}`;
+      await context`INSERT INTO "values"${context(
+        {
+          value,
+          meter_id: this.id,
+          date
+        },
+        "value",
+        "meter_id",
+        "date"
+      )}`;
     } catch (e) {
       console.log(e.query);
       throw e;
