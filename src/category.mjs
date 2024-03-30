@@ -2,7 +2,7 @@ import { Category, id } from "@konsumation/model";
 import { Meter } from "@konsumation/konsum-db-postgresql";
 
 /**
- * 
+ *
  */
 export class PostgresCategory extends Category {
   //id;
@@ -10,7 +10,7 @@ export class PostgresCategory extends Category {
   static get attributes() {
     return {
       ...super.attributes,
-      id,
+      id
     };
   }
   static get attributeNameMapping() {
@@ -69,9 +69,11 @@ export class PostgresCategory extends Category {
 
   async deleteMeter(sql) {}
 
-  async *meters(context) {
-    for await (const [row] of context`SELECT * FROM meter WHERE category_id=${this.id}`.cursor()) {
-      row.category=this;
+  async *meters(sql) {
+    for await (const [
+      row
+    ] of sql`SELECT * FROM meter WHERE category_id=${this.id}`.cursor()) {
+      row.category = this;
       yield new Meter(row);
     }
   }
