@@ -40,5 +40,9 @@ test.serial("restore", async t => {
 
   t.is(category, 3);
 
+  for await (const line of master.text(master.context)) {
+    console.log(line);
+  }
+
   await master.close();
 });
