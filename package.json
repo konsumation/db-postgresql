@@ -49,17 +49,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/konsumation/konsum-db-postgresql.git"
+    "url": "git+https://github.com/konsumation/db-postgresql.git"
   },
   "bugs": {
-    "url": "https://github.com/konsumation/konsum-db-postgresql/issues"
+    "url": "https://github.com/konsumation/db-postgresql/issues"
   },
-  "homepage": "https://github.com/konsumation/konsum-db-postgresql#readme",
+  "homepage": "https://github.com/konsumation/db-postgresql#readme",
   "template": {
     "inheritFrom": [
       "arlac77/template-github-action",
       "arlac77/template-javascript-component",
       "arlac77/template-typescript",
+      "arlac77/template-vscode",
       "konsumation/template"
     ]
   }
