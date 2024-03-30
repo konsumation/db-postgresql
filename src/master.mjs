@@ -22,20 +22,20 @@ export class PostgresMaster extends Master {
 
   static async initialize(url, schema) {
     const context = postgres(url, {
+      //client_min_messages: 'ERROR',
       connection: { search_path: getSchema(url, schema) }
     });
 
-    const readVersion = async () =>
-      (await context`SELECT schema_version FROM version ORDER BY migrated`)[0]
-        .schema_version;
+    let values;
 
     /**
      * get meta info like schema version
      */
 
-    let version;
     try {
-      version = await readVersion();
+      values = (
+        await context`SELECT version,description FROM info ORDER BY created`
+      )[0];
     } catch (e) {
       switch (e.code) {
         // undefined_table https://www.postgresql.org/docs/current/errcodes-appendix.html
@@ -46,11 +46,12 @@ export class PostgresMaster extends Master {
                 new URL("sql/schema.sql", import.meta.url).pathname
               );
 
-              await context`INSERT INTO version ${context(
-                { schema_version: VERSION },
-                ["schema_version"]
+              values = { version: VERSION };
+
+              await context`INSERT INTO info ${context(
+                values,
+                Object.keys(values)
               )}`;
-              version = VERSION;
             } catch (e) {
               console.log(e);
             }
@@ -61,17 +62,16 @@ export class PostgresMaster extends Master {
       }
     }
 
-    if (version !== VERSION) {
-      throw new Error(`Unsupported schema version: ${version}`);
+    if (values?.version !== VERSION) {
+      throw new Error(`Unsupported schema version: ${values?.version}`);
     }
 
-    return new PostgresMaster(context, version);
+    return new PostgresMaster(values, context);
   }
 
-  constructor(context, version) {
-    super();
+  constructor(values, context) {
+    super(values);
     this.context = context;
-    this.schemaVersion = version;
   }
 
   /**
@@ -85,7 +85,7 @@ export class PostgresMaster extends Master {
   async *categories(context) {
     for await (const [
       row
-    ] of context`SELECT name,description FROM category`.cursor()) {
+    ] of context`SELECT id,name,description FROM category`.cursor()) {
       yield new PostgresCategory(row);
     }
   }

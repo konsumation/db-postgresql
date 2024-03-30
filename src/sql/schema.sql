@@ -42,7 +42,8 @@ CREATE TABLE note (
     description VARCHAR(80)
 );
 
-CREATE TABLE version (
-    schema_version VARCHAR(50) NOT NULL,
-    migrated TIMESTAMP NOT NULL UNIQUE DEFAULT current_timestamp
+CREATE TABLE info (
+    version VARCHAR(50) NOT NULL,
+    description VARCHAR(80),
+    created TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
