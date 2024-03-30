@@ -1,7 +1,6 @@
 import test from "ava";
 import { createReadStream } from "node:fs";
-
-import { Master } from "@konsumation/konsum-db-postgresql";
+import { Master } from "@konsumation/db-postgresql";
 import { createSchema, dropSchema } from "./util.mjs";
 
 const SCHEMA = "konsum_master_test";

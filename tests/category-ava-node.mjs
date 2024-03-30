@@ -1,5 +1,5 @@
 import test from "ava";
-import { Master, Category } from "@konsumation/konsum-db-postgresql";
+import { Master, Category } from "@konsumation/db-postgresql";
 import { testCategoryConstructor, testCreateCategories } from "@konsumation/db-test";
 import { createSchema, dropSchema } from "./util.mjs";
 

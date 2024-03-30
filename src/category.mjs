@@ -1,5 +1,5 @@
 import { Category, id } from "@konsumation/model";
-import { Meter } from "@konsumation/konsum-db-postgresql";
+import { Meter } from "@konsumation/db-postgresql";
 
 /**
  *

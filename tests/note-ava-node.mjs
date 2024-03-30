@@ -4,7 +4,7 @@ import {
   Note,
   Meter,
   Category
-} from "@konsumation/konsum-db-postgresql";
+} from "@konsumation/db-postgresql";
 import { testNoteConstructor } from "@konsumation/db-test";
 import { createSchema, dropSchema } from "./util.mjs";
 

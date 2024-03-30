@@ -1,5 +1,5 @@
 {
-  "name": "@konsumation/konsum-db-postgresql",
+  "name": "@konsumation/db-postgresql",
   "version": "0.0.0-semantic-release",
   "publishConfig": {
     "access": "public"
