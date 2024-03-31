@@ -1,12 +1,10 @@
 import { Category, id } from "@konsumation/model";
-import { Meter } from "@konsumation/db-postgresql";
+import { PostgresMeter } from "@konsumation/db-postgresql";
 
 /**
  *
  */
 export class PostgresCategory extends Category {
-  //id;
-
   static get attributes() {
     return {
       ...super.attributes,
@@ -77,7 +75,7 @@ export class PostgresCategory extends Category {
       row
     ] of sql`SELECT * FROM meter WHERE category_id=${this.id}`.cursor()) {
       row.category = this;
-      yield new Meter(row);
+      yield new PostgresMeter(row);
     }
   }
 

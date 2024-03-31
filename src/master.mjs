@@ -4,10 +4,7 @@ import { PostgresCategory } from "./category.mjs";
 import { PostgresMeter } from "./meter.mjs";
 import { PostgresNote } from "./note.mjs";
 import { getSchema } from "./util.mjs";
-export { PostgresMaster as Master };
-export { PostgresMeter as Meter };
-export { PostgresCategory as Category };
-export { PostgresNote as Note };
+export { PostgresMeter, PostgresNote, PostgresCategory };
 
 const VERSION = "1";
 

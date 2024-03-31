@@ -1,5 +1,9 @@
 import test from "ava";
-import { Meter, Master, Category } from "@konsumation/db-postgresql";
+import {
+  PostgresMaster,
+  PostgresCategory,
+  PostgresMeter
+} from "@konsumation/db-postgresql";
 import { testMeterConstructor } from "@konsumation/db-test";
 import { createSchema, dropSchema } from "./util.mjs";
 
@@ -9,24 +13,27 @@ test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("Meter constructor", t =>
-  testMeterConstructor(t, Meter, {
+  testMeterConstructor(t, PostgresMeter, {
     name: "M1",
-    category: new Category({ name: "CAT-1" }),
+    category: new PostgresCategory({ name: "CAT-1" }),
     fractional_digits: 2,
     valid_from: new Date()
   }));
 
 test("Meter add / delete / update", async t => {
-  const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
+  const master = await PostgresMaster.initialize(
+    process.env.POSTGRES_URL,
+    SCHEMA
+  );
 
-  const category = new Category({
+  const category = new PostgresCategory({
     name: `CAT-Update`,
     description: `Category CAT-insert`
   });
   await category.write(master.context);
   t.true(category.id > 0);
 
-  const meter = new Meter({
+  const meter = new PostgresMeter({
     category,
     name: "M1",
     serial: "12345",

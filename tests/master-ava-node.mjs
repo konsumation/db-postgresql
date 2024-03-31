@@ -1,6 +1,9 @@
 import test from "ava";
 import { createReadStream } from "node:fs";
-import { Master } from "@konsumation/db-postgresql";
+import {
+  testRestoreUnsupportedVersion
+} from "@konsumation/db-test";
+import { PostgresMaster } from "@konsumation/db-postgresql";
 import { createSchema, dropSchema } from "./util.mjs";
 
 const SCHEMA = "konsum_master_test";
@@ -8,8 +11,11 @@ const SCHEMA = "konsum_master_test";
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
+test("testRestoreUnsupportedVersion", async t =>
+  testRestoreUnsupportedVersion(t, PostgresMaster, process.env.POSTGRES_URL));
+
 test.serial("initialize", async t => {
-  const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
+  const master = await PostgresMaster.initialize(process.env.POSTGRES_URL, SCHEMA);
 
   t.truthy(master.context);
 
@@ -26,7 +32,7 @@ test.serial("initialize", async t => {
 });
 
 test.serial("restore", async t => {
-  const master = await Master.initialize(process.env.POSTGRES_URL, SCHEMA);
+  const master = await PostgresMaster.initialize(process.env.POSTGRES_URL, SCHEMA);
   const { category } = await master.fromText(
     createReadStream(
       new URL(
