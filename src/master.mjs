@@ -18,6 +18,12 @@ const VERSION = "1";
  * @property {string} schemaVersion
  */
 export class PostgresMaster extends Master {
+
+  static get name()
+  {
+    return "postgresql";
+  }
+
   context;
 
   static async initialize(url, schema) {
@@ -82,10 +88,14 @@ export class PostgresMaster extends Master {
     this.context = undefined;
   }
 
-  async *categories(context) {
+  async addCategory(values) {
+    return new PostgresCategory(values);
+  }
+
+  async *categories() {
     for await (const [
       row
-    ] of context`SELECT id,name,description FROM category`.cursor()) {
+    ] of this.context`SELECT id,name,description FROM category`.cursor()) {
       yield new PostgresCategory(row);
     }
   }
