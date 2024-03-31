@@ -47,9 +47,12 @@ export class PostgresCategory extends Category {
         ...names
       )} WHERE ${this.primaryKeyExpression(sql)}`;
     } else {
-      this.id = (
-        await sql`INSERT INTO category ${sql(values, ...names)} RETURNING id`
-      )[0].id;
+      Object.assign(
+        this,
+        (
+          await sql`INSERT INTO category ${sql(values, ...names)} RETURNING id`
+        )[0]
+      );
     }
   }
 

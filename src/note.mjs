@@ -1,7 +1,7 @@
 import { Note, id } from "@konsumation/model";
 
 /**
- * 
+ *
  */
 export class PostgresNote extends Note {
   static get attributeNameMapping() {
@@ -26,9 +26,10 @@ export class PostgresNote extends Note {
         ...names
       )} WHERE ${this.primaryKeyExpression(sql)}`;
     } else {
-      this.id = (
-        await sql`INSERT INTO note ${sql(values, ...names)} RETURNING id`
-      )[0].id;
+      Object.assign(
+        this,
+        (await sql`INSERT INTO note ${sql(values, ...names)} RETURNING id`)[0]
+      );
     }
   }
 }

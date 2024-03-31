@@ -34,9 +34,10 @@ export class PostgresMeter extends Meter {
         ...names
       )} WHERE ${this.primaryKeyExpression(sql)}`;
     } else {
-      this.id = (
-        await sql`INSERT INTO meter ${sql(values, ...names)} RETURNING id`
-      )[0].id;
+      Object.assign(
+        this,
+        (await sql`INSERT INTO meter ${sql(values, ...names)} RETURNING id`)[0]
+      );
     }
   }
 
