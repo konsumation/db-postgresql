@@ -1,9 +1,16 @@
 import { Meter, id } from "@konsumation/model";
+import { PostgresNote } from "./note.mjs";
 
 /**
  *
  */
 export class PostgresMeter extends Meter {
+  static get factories() {
+    return {
+      [PostgresNote.typeName]: PostgresNote
+    };
+  }
+
   static get attributeNameMapping() {
     return {
       fractionalDigits: "fractional_digits",

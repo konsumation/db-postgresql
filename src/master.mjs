@@ -15,10 +15,14 @@ const VERSION = "1";
  * @property {string} schemaVersion
  */
 export class PostgresMaster extends Master {
-
-  static get name()
-  {
+  static get name() {
     return "postgresql";
+  }
+
+  static get factories() {
+    return {
+      [PostgresCategory.typeName]: PostgresCategory
+    };
   }
 
   context;
@@ -85,23 +89,10 @@ export class PostgresMaster extends Master {
     this.context = undefined;
   }
 
-  async addCategory(values) {
-    return new PostgresCategory(values);
-  }
-
   async *categories() {
-    for await (const [
-      row
-    ] of this.context`SELECT id,name,description FROM category`.cursor()) {
+    for await (const [row] of this
+      .context`SELECT id,name,description FROM category`.cursor()) {
       yield new PostgresCategory(row);
     }
-  }
-
-  async fromText(input) {
-    return super.fromText(input, [
-      PostgresCategory,
-      PostgresMeter,
-      PostgresNote
-    ]);
   }
 }

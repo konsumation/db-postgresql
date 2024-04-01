@@ -23,7 +23,6 @@ test("Category write / read / update / delete", async t => {
   const categories = await testCreateCategories(
     t,
     master,
-    PostgresCategory,
     Array.from({ length: 10 }, (_, i) => `CAT-${i}`),
     {},
     (t, category) => t.true(category.id > 0)

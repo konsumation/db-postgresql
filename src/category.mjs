@@ -5,12 +5,19 @@ import { PostgresMeter } from "@konsumation/db-postgresql";
  *
  */
 export class PostgresCategory extends Category {
+  static get factories() {
+    return {
+      [PostgresMeter.typeName]: PostgresMeter
+    };
+  }
+
   static get attributes() {
     return {
       ...super.attributes,
       id
     };
   }
+
   static get attributeNameMapping() {
     return {
       fractionalDigits: "fractional_digits",
@@ -62,10 +69,6 @@ export class PostgresCategory extends Category {
     if (this.id) {
       return sql`DELETE FROM category WHERE ${this.primaryKeyExpression(sql)}`;
     }
-  }
-
-  async addMeter(sql, meter) {
-    meter.category = this;
   }
 
   async deleteMeter(sql) {}
