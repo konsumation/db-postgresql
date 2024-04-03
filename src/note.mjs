@@ -13,6 +13,7 @@ export class PostgresNote extends Note {
   }
 
   primaryKeyExpression(sql) {
+    // @ts-ignore
     return sql({ id: this.id }, "id");
   }
 
@@ -20,6 +21,7 @@ export class PostgresNote extends Note {
     const values = this.getAttributes();
     const names = Object.keys(values);
 
+    // @ts-ignore
     if (this.id) {
       await sql`UPDATE note SET ${sql(
         values,

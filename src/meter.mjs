@@ -28,6 +28,7 @@ export class PostgresMeter extends Meter {
   }
 
   primaryKeyExpression(sql) {
+    // @ts-ignore
     return sql({ id: this.id }, "id");
   }
 
@@ -35,6 +36,7 @@ export class PostgresMeter extends Meter {
     const values = this.getAttributes();
     const names = Object.keys(values);
 
+    // @ts-ignore
     if (this.id) {
       await sql`UPDATE meter SET ${sql(
         values,
@@ -58,6 +60,7 @@ export class PostgresMeter extends Meter {
    * @param {*} sql
    */
   async delete(sql) {
+    // @ts-ignore
     if (this.id) {
       return sql`DELETE FROM meter WHERE ${this.primaryKeyExpression(sql)}`;
     }
@@ -70,6 +73,7 @@ export class PostgresMeter extends Meter {
     try {
       await context`INSERT INTO "values"${context(
         {
+          // @ts-ignore
           meter_id: this.id,
           value,
           date
@@ -84,7 +88,7 @@ export class PostgresMeter extends Meter {
     }
   }
 
-    /**
+  /**
    * Get values of the meter.
    * @param {any} context
    * @param {Object} [options]
@@ -94,6 +98,7 @@ export class PostgresMeter extends Meter {
    * @return {AsyncIterable<{value:number, date: Date}>}
    */
   async *values(context, options) {
+    // @ts-ignore
     for await (const row of context`SELECT date,value FROM values WHERE meter_id=${this.id}`) {
       yield row;
     }

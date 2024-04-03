@@ -25,8 +25,6 @@ export class PostgresMaster extends Master {
     };
   }
 
-  context;
-
   /**
    * 
    * @param {string} url 
@@ -61,6 +59,7 @@ export class PostgresMaster extends Master {
 
               values = { version: VERSION };
 
+              // @ts-ignore
               await context`INSERT INTO info ${context(
                 values,
                 Object.keys(values)

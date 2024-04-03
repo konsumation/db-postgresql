@@ -26,6 +26,7 @@ export class PostgresCategory extends Category {
   }
 
   primaryKeyExpression(sql) {
+    // @ts-ignore
     return sql({ id: this.id }, "id");
   }
 
@@ -38,7 +39,7 @@ export class PostgresCategory extends Category {
   /**
    * Add category record to database.
    * @param {*} sql
-   * @returns
+   * @returns {Promise<void>}
    */
   async write(sql) {
     //TODO check if columns are changed?
@@ -46,6 +47,7 @@ export class PostgresCategory extends Category {
     const values = this.getAttributes();
     const names = Object.keys(values);
 
+    // @ts-ignore
     if (this.id) {
       await sql`UPDATE category SET ${sql(
         values,
@@ -66,6 +68,7 @@ export class PostgresCategory extends Category {
    * @param {*} sql
    */
   async delete(sql) {
+    // @ts-ignore
     if (this.id) {
       return sql`DELETE FROM category WHERE ${this.primaryKeyExpression(sql)}`;
     }
@@ -82,9 +85,10 @@ export class PostgresCategory extends Category {
    * @param {boolean} [options.reverse] order
    * @return {AsyncIterable<Meter>}
    */
-  async *meters(sql) {
+  async *meters(sql, options) {
     for await (const [
       row
+      // @ts-ignore
     ] of sql`SELECT * FROM meter WHERE category_id=${this.id}`.cursor()) {
       row.category = this;
       yield new PostgresMeter(row);
