@@ -84,8 +84,17 @@ export class PostgresMeter extends Meter {
     }
   }
 
+    /**
+   * Get values of the meter.
+   * @param {any} context
+   * @param {Object} [options]
+   * @param {string} [options.gte] time of earliest value
+   * @param {string} [options.lte] time of latest value
+   * @param {boolean} [options.reverse] order
+   * @return {AsyncIterable<{value:number, date: Date}>}
+   */
   async *values(context, options) {
-    for await (const row of sql`SELECT date,value FROM values WHERE meter_id=${this.id}`) {
+    for await (const row of context`SELECT date,value FROM values WHERE meter_id=${this.id}`) {
       yield row;
     }
   }
