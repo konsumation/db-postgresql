@@ -32,7 +32,7 @@ export class PostgresMeter extends Meter {
   }
 
   async write(sql) {
-    const values = this.attributeValues;
+    const values = this.getAttributes();
     const names = Object.keys(values);
 
     if (this.id) {
