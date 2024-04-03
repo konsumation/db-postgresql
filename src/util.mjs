@@ -68,7 +68,7 @@ export async function executeStatements(client, chunks, properties) {
 /**
  * Extract schema name from postgres url
  * @param {string} url
- * @param {string?} schema
+ * @param {string} [schema]
  * @returns {string?}
  */
 export function getSchema(url, schema) {

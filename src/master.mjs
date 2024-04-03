@@ -27,6 +27,12 @@ export class PostgresMaster extends Master {
 
   context;
 
+  /**
+   * 
+   * @param {string} url 
+   * @param {string} [schema] 
+   * @returns {Promise<PostgresMaster>}
+   */
   static async initialize(url, schema) {
     const context = postgres(url, {
       //client_min_messages: 'ERROR',

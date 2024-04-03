@@ -70,8 +70,8 @@ export class PostgresMeter extends Meter {
     try {
       await context`INSERT INTO "values"${context(
         {
-          value,
           meter_id: this.id,
+          value,
           date
         },
         "value",
@@ -81,6 +81,12 @@ export class PostgresMeter extends Meter {
     } catch (e) {
       console.log(e.query);
       throw e;
+    }
+  }
+
+  async *values(context, options) {
+    for await (const row of sql`SELECT date,value FROM values WHERE meter_id=${this.id}`) {
+      yield row;
     }
   }
 }

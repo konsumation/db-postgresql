@@ -1,4 +1,4 @@
-import { Category, id } from "@konsumation/model";
+import { Category, Meter, id } from "@konsumation/model";
 import { PostgresMeter } from "@konsumation/db-postgresql";
 
 /**
@@ -73,6 +73,15 @@ export class PostgresCategory extends Category {
 
   async deleteMeter(sql) {}
 
+  /**
+   * Get Meters of the category.
+   * @param {any} sql
+   * @param {Object} [options]
+   * @param {string} [options.gte] from name
+   * @param {string} [options.lte] up to name
+   * @param {boolean} [options.reverse] order
+   * @return {AsyncIterable<Meter>}
+   */
   async *meters(sql) {
     for await (const [
       row
