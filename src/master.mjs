@@ -101,3 +101,5 @@ export class PostgresMaster extends Master {
     }
   }
 }
+
+export default PostgresMaster;
