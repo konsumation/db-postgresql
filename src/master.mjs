@@ -26,9 +26,9 @@ export class PostgresMaster extends Master {
   }
 
   /**
-   * 
-   * @param {string} url 
-   * @param {string} [schema] 
+   *
+   * @param {string} url
+   * @param {string} [schema]
    * @returns {Promise<PostgresMaster>}
    */
   static async initialize(url, schema) {
@@ -84,6 +84,14 @@ export class PostgresMaster extends Master {
   constructor(values, context) {
     super(values);
     this.context = context;
+  }
+
+  async write(sql) {
+    const values = this.getAttributes();
+    return sql`UPDATE info SET ${sql(
+      values,
+      "description"
+    )} WHERE version=${VERSION}`;
   }
 
   /**
