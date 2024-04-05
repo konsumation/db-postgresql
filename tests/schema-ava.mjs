@@ -12,3 +12,4 @@ test(gst, "postgresql://h/d", undefined, undefined);
 test(gst, "postgresql://h/d", "s", "s");
 test(gst, "postgresql://h/d?options=-c search_path=public", undefined, "public");
 test(gst, "postgresql://h/d?options=-c search_path=public", "s", "s");
+test.failing(gst, "postgresql://h/d?currentSchema=s", undefined, "s");
