@@ -24,7 +24,7 @@ test(gst, "postgresql://h/d?currentSchema=s", "bla", "bla");
 
 test(sst, "postgresql://h/d", undefined, "postgresql://h/d");
 test(sst, "postgresql://h/d", "s", "postgresql://h/d?currentSchema=s");
-test.skip(sst, "postgresql://h/d?options=-c search_path=public", undefined, "public");
-test.skip(sst, "postgresql://h/d?options=-c search_path=public", "s", "s");
-test.skip(sst, "postgresql://h/d?currentSchema=s", undefined, "postgresql://h/d");
+test(sst, "postgresql://h/d?options=-c search_path=public", undefined, "postgresql://h/d");
+test(sst, "postgresql://h/d?options=-c search_path=public", "s", "postgresql://h/d?currentSchema=s");
+test(sst, "postgresql://h/d?currentSchema=s", undefined, "postgresql://h/d");
 test(sst, "postgresql://h/d?currentSchema=s", "bla", "postgresql://h/d?currentSchema=bla");

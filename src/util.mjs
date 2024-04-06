@@ -94,6 +94,8 @@ export function getSchema(url, schema) {
  * @returns {string?}
  */
 export function setSchema(url, schema) {
+  //do we need any other options on url, if yes replace need to be modified like on getSchema
+  url = url.replace(/\?.*$/, "");
   if (schema) {
     return `${url}?currentSchema=${schema}`
   } else { return url }
