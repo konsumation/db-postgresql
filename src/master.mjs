@@ -27,14 +27,15 @@ export class PostgresMaster extends Master {
 
   /**
    *
-   * @param {string} url
+   * @param {string} purl
    * @param {string} [schema]
    * @returns {Promise<PostgresMaster>}
    */
-  static async initialize(url, schema) {
+  static async initialize(purl) {
+    const { schema, url } = getSchema(purl);
     const context = postgres(url, {
       //client_min_messages: 'ERROR',
-      connection: { search_path: getSchema(url, schema) }
+      connection: { search_path: schema }
     });
 
     let values;

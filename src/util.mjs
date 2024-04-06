@@ -17,7 +17,8 @@ export function getSchema(url, schema) {
       }
     }
   }
-  return schema;
+  url = url.replace(/\?.*$/, "")
+  return { url, schema };
 }
 
 /**

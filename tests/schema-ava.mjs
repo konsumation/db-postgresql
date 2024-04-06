@@ -2,7 +2,7 @@ import test from "ava";
 import { getSchema, setSchema } from "../src/util.mjs";
 
 async function gst(t, url, schema, expected) {
-  t.is(getSchema(url, schema), expected);
+  t.deepEqual(getSchema(url, schema), expected);
 }
 
 async function sst(t, url, schema, expected) {
@@ -15,12 +15,30 @@ gst.title = (providedTitle = "getSchema", url, schema, expected) =>
 sst.title = (providedTitle = "setSchema", url, schema, expected) =>
   `${providedTitle} ${url} ${schema} -> ${expected}`.trim();
 
-test(gst, "postgresql://h/d", undefined, undefined);
-test(gst, "postgresql://h/d", "s", "s");
-test(gst, "postgresql://h/d?options=-c search_path=public", undefined, "public");
-test(gst, "postgresql://h/d?options=-c search_path=public", "s", "s");
-test(gst, "postgresql://h/d?currentSchema=s", undefined, "s");
-test(gst, "postgresql://h/d?currentSchema=s", "bla", "bla");
+test(gst, "postgresql://h/d", undefined, {
+  schema: undefined,
+  url: 'postgresql://h/d',
+});
+test(gst, "postgresql://h/d", "s", {
+  schema: "s",
+  url: 'postgresql://h/d',
+});
+test(gst, "postgresql://h/d?options=-c search_path=public", undefined, {
+  schema: "public",
+  url: 'postgresql://h/d',
+});
+test(gst, "postgresql://h/d?options=-c search_path=public", "s", {
+  schema: "s",
+  url: 'postgresql://h/d',
+});
+test(gst, "postgresql://h/d?currentSchema=s", undefined, {
+  schema: "s",
+  url: 'postgresql://h/d',
+});
+test(gst, "postgresql://h/d?currentSchema=s", "bla", {
+  schema: "bla",
+  url: 'postgresql://h/d',
+});
 
 test(sst, "postgresql://h/d", undefined, "postgresql://h/d");
 test(sst, "postgresql://h/d", "s", "postgresql://h/d?currentSchema=s");
