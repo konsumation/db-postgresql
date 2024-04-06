@@ -78,12 +78,12 @@ export class PostgresMeter extends Meter {
           value,
           date
         },
-        "value",
         "meter_id",
+        "value",
         "date"
       )}`;
     } catch (e) {
-      console.log(e.query);
+      console.log("meter", e.query, date, value);
       throw e;
     }
   }
