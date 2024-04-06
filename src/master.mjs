@@ -21,7 +21,7 @@ export class PostgresMaster extends Master {
 
   static get factories() {
     return {
-      [PostgresCategory.typeName]: PostgresCategory
+      [PostgresCategory.type]: PostgresCategory
     };
   }
 

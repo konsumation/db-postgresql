@@ -7,7 +7,7 @@ import { PostgresMeter } from "@konsumation/db-postgresql";
 export class PostgresCategory extends Category {
   static get factories() {
     return {
-      [PostgresMeter.typeName]: PostgresMeter
+      [PostgresMeter.type]: PostgresMeter
     };
   }
 

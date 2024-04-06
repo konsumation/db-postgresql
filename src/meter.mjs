@@ -7,7 +7,7 @@ import { PostgresNote } from "./note.mjs";
 export class PostgresMeter extends Meter {
   static get factories() {
     return {
-      [PostgresNote.typeName]: PostgresNote
+      [PostgresNote.type]: PostgresNote
     };
   }
 
