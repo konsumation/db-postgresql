@@ -7,6 +7,8 @@ import {
 } from "@konsumation/db-postgresql";
 import { testNoteConstructor } from "@konsumation/db-test";
 import { createSchema, dropSchema } from "./util.mjs";
+import { setSchema } from "../src/util.mjs";
+
 
 const SCHEMA = "konsum_note_test";
 
@@ -14,10 +16,10 @@ test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("Note constructor", t =>
-  testNoteConstructor(t, PostgresNote, { }));
+  testNoteConstructor(t, PostgresNote, {}));
 
 test("Note add / delete / update", async t => {
-  const master = await PostgresMaster.initialize(process.env.POSTGRES_URL, SCHEMA);
+  const master = await PostgresMaster.initialize(setSchema(process.env.POSTGRES_URL, SCHEMA));
 
   const category = new PostgresCategory({
     name: "CAT-Update",

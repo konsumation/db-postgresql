@@ -5,6 +5,7 @@ import {
   testCreateCategories
 } from "@konsumation/db-test";
 import { createSchema, dropSchema } from "./util.mjs";
+import { setSchema } from "../src/util.mjs";
 
 const SCHEMA = "konsum_test_1";
 
@@ -16,8 +17,7 @@ test("Category constructor", t =>
 
 test("Category write / read / update / delete", async t => {
   const master = await PostgresMaster.initialize(
-    process.env.POSTGRES_URL,
-    SCHEMA
+    setSchema(process.env.POSTGRES_URL, SCHEMA)
   );
 
   const categories = await testCreateCategories(

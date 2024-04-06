@@ -6,6 +6,7 @@ import {
 } from "@konsumation/db-postgresql";
 import { testMeterConstructor } from "@konsumation/db-test";
 import { createSchema, dropSchema } from "./util.mjs";
+import { setSchema } from "../src/util.mjs";
 
 const SCHEMA = "konsum_meter_test";
 
@@ -22,8 +23,7 @@ test("Meter constructor", t =>
 
 test("Meter add / delete / update", async t => {
   const master = await PostgresMaster.initialize(
-    process.env.POSTGRES_URL,
-    SCHEMA
+    setSchema(process.env.POSTGRES_URL, SCHEMA)
   );
 
   const category = new PostgresCategory({
