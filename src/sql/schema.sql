@@ -29,9 +29,9 @@ COMMENT ON COLUMN meter.fractional_digits IS 'display precission';
 CREATE TABLE
 values
     (
-        value DECIMAL NOT NULL,
         meter_id INT NOT NULL REFERENCES meter (id),
         date TIMESTAMP NOT NULL,
+        value DECIMAL NOT NULL,
         PRIMARY KEY(meter_id, date)
     );
 
