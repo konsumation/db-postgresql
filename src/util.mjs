@@ -74,13 +74,27 @@ export async function executeStatements(client, chunks, properties) {
 export function getSchema(url, schema) {
   if (!schema) {
     const u = new URL(url);
-
-    if (u.searchParams?.has("options")) {
-      const m = u.searchParams.get("options")?.match(/search_path=(\w+)/);
-      if (m) {
-        schema = m[1];
+    if (u.searchParams.has("currentSchema")) {
+      schema = u.searchParams.get("currentSchema")
+    } else
+      if (u.searchParams?.has("options")) {
+        const m = u.searchParams.get("options")?.match(/search_path=(\w+)/);
+        if (m) {
+          schema = m[1];
+        }
       }
-    }
   }
   return schema;
+}
+
+/**
+ * Set schema name to postgres url
+ * @param {string} url
+ * @param {string} [schema]
+ * @returns {string?}
+ */
+export function setSchema(url, schema) {
+  if (schema) {
+    return `${url}?currentSchema=${schema}`
+  } else { return url }
 }
