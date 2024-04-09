@@ -5,19 +5,24 @@ import Master from "@konsumation/db-postgresql";
 import { createSchema, dropSchema } from "./util.mjs";
 import { setSchema } from "../src/util.mjs";
 
-
 const SCHEMA = "konsum_master_test";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("testRestoreUnsupportedVersion", async t =>
-  testRestoreUnsupportedVersion(t, Master, setSchema(process.env.POSTGRES_URL, SCHEMA)));
+  testRestoreUnsupportedVersion(
+    t,
+    Master,
+    setSchema(process.env.POSTGRES_URL, SCHEMA)
+  ));
 
 test("Master name", t => t.is(Master.name, "postgresql"));
 
 test.serial("initialize", async t => {
-  const master = await Master.initialize(setSchema(process.env.POSTGRES_URL, SCHEMA));
+  const master = await Master.initialize(
+    setSchema(process.env.POSTGRES_URL, SCHEMA)
+  );
 
   t.truthy(master.context);
 
@@ -34,7 +39,9 @@ test.serial("initialize", async t => {
 });
 
 test("restore", async t => {
-  const master = await Master.initialize(setSchema(process.env.POSTGRES_URL, SCHEMA));
+  const master = await Master.initialize(
+    setSchema(process.env.POSTGRES_URL, SCHEMA)
+  );
   const { category } = await master.fromText(
     createReadStream(
       new URL(
@@ -46,7 +53,8 @@ test("restore", async t => {
   );
 
   t.is(category, 3);
-  for await (const line of master.text(master.context)) {
+  
+  for await (const line of master.text()) {
     console.log(line);
   }
 
