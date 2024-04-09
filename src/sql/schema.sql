@@ -31,7 +31,7 @@ values
     (
         meter_id INT NOT NULL REFERENCES meter (id),
         date TIMESTAMP NOT NULL,
-        value DECIMAL NOT NULL,
+        value REAL NOT NULL,
         PRIMARY KEY(meter_id, date)
     );
 
