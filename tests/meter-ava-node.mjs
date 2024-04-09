@@ -4,7 +4,10 @@ import {
   PostgresCategory,
   PostgresMeter
 } from "@konsumation/db-postgresql";
-import { testMeterConstructor } from "@konsumation/db-test";
+import {
+  testMeterConstructor,
+  testInsertListValues
+} from "@konsumation/db-test";
 import { createSchema, dropSchema } from "./util.mjs";
 import { setSchema } from "../src/util.mjs";
 
@@ -49,7 +52,9 @@ test("Meter add / delete / update", async t => {
   await meter.write(master.context);
   t.true(meter.id > 0);
 
-  await meter.writeValue(master.context, new Date(), 234);
+  await testInsertListValues(t, master, meter, [
+    { date: new Date(), value: 234 }
+  ]);
 
   await master.close();
 });
