@@ -54,9 +54,9 @@ test("restore", async t => {
 
   t.is(category, 3);
   
-  for await (const line of master.text()) {
+  /*for await (const line of master.text()) {
     console.log(line);
-  }
+  }*/
 
   await master.close();
 });

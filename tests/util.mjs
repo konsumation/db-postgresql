@@ -7,7 +7,7 @@ export async function createSchema(url, name) {
     await sql`CREATE SCHEMA ${sql(name)}`;
     await sql.end();
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw e;
   }
 }
@@ -18,7 +18,7 @@ export async function dropSchema(url, name) {
     await sql`DROP SCHEMA IF EXISTS ${sql(name)} CASCADE`;
     await sql.end();
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw e;
   }
 }
