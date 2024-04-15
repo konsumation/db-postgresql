@@ -16,6 +16,8 @@ jobs:
     strategy:
       matrix:
         node-version:
+          - 20.12.2
+          - null
     env:
       POSTGRES_URL: postgresql://postgres:postgres@localhost:5432/ci_db_test
       POSTGRES_USER: postgres
@@ -65,7 +67,7 @@ jobs:
       - uses: actions/checkout@v4.1.2
       - uses: actions/setup-node@v4.0.2
         with:
-          node-version: 20.12.0
+          node-version: 20.12.2
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci
