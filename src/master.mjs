@@ -66,12 +66,12 @@ export class PostgresMaster extends Master {
                 Object.keys(values)
               )}`;
             } catch (e) {
-              console.log(e);
+              console.error(e);
             }
           }
           break;
         default:
-          console.log(e);
+          console.error(e);
       }
     }
 
