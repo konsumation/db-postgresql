@@ -69,23 +69,17 @@ export class PostgresMeter extends Meter {
   /**
    * Write a time/value pair.
    */
-  async writeValue(context, date, value) {
-    try {
-      await context`INSERT INTO "values"${context(
-        {
-          // @ts-ignore
-          meter_id: this.id,
-          value,
-          date
-        },
-        "meter_id",
-        "value",
-        "date"
-      )}`;
-    } catch (e) {
-      console.log("meter", e.query, date, value);
-      throw e;
-    }
+  async addValue(context, attributes) {
+    await context`INSERT INTO "values"${context(
+      {
+        // @ts-ignore
+        meter_id: this.id,
+        ...attributes
+      },
+      "meter_id",
+      "value",
+      "date"
+    )}`;
   }
 
   /**
