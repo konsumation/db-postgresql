@@ -21,7 +21,8 @@ test("Meter constructor", t =>
     name: "M1",
     category: new PostgresCategory({ name: "CAT-1" }),
     fractional_digits: 2,
-    valid_from: new Date()
+    validFrom: new Date(1), // TODO reverse mapping
+    valid_from: new Date(1)
   }));
 
 test("Meter add / delete / update", async t => {
