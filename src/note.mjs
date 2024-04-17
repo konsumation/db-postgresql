@@ -7,7 +7,6 @@ export class PostgresNote extends Note {
   static get attributeNameMapping() {
     return {
       id,
-      meter: null,
       "meter.id": "meter_id"
     };
   }
@@ -18,7 +17,7 @@ export class PostgresNote extends Note {
   }
 
   async write(sql) {
-    const values = this.getAttributes();
+    const values = this.getLocalAttributes();
     const names = Object.keys(values);
 
     // @ts-ignore

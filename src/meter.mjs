@@ -17,7 +17,6 @@ export class PostgresMeter extends Meter {
     return {
       fractionalDigits: "fractional_digits",
       validFrom: "valid_from",
-      category: null,
       "category.id": "category_id"
     };
   }
@@ -35,7 +34,7 @@ export class PostgresMeter extends Meter {
   }
 
   async write(sql) {
-    const values = this.getAttributes();
+    const values = this.getLocalAttributes();
     const names = Object.keys(values);
 
     // @ts-ignore

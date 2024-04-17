@@ -6,7 +6,6 @@ import { Value } from "@konsumation/model";
 export class PostgresValue extends Value {
   static get attributeNameMapping() {
     return {
-      meter: null,
       "meter.id": "meter_id"
     };
   }
@@ -17,7 +16,7 @@ export class PostgresValue extends Value {
   }
 
   async write(sql) {
-    const values = this.getAttributes();
+    const values = this.getLocalAttributes();
     const names = Object.keys(values);
     return sql`INSERT INTO "values"${sql(values, ...names)}`;
   }
