@@ -1,5 +1,6 @@
-import { Meter, id } from "@konsumation/model";
+import { Meter, Value, id } from "@konsumation/model";
 import { PostgresNote } from "./note.mjs";
+import { PostgresValue } from "./value.mjs";
 
 /**
  *
@@ -7,7 +8,8 @@ import { PostgresNote } from "./note.mjs";
 export class PostgresMeter extends Meter {
   static get factories() {
     return {
-      [PostgresNote.type]: PostgresNote
+      [PostgresNote.type]: PostgresNote,
+      [PostgresValue.type]: PostgresValue
     };
   }
 
@@ -55,6 +57,7 @@ export class PostgresMeter extends Meter {
     const result = await sql`SELECT * FROM meter WHERE name=${name}`;
     return new this({ name, ...result[0] });
   }
+
   /**
    * Delete record from database.
    * @param {*} sql
@@ -67,34 +70,18 @@ export class PostgresMeter extends Meter {
   }
 
   /**
-   * Write a time/value pair.
-   */
-  async addValue(context, attributes) {
-    await context`INSERT INTO "values"${context(
-      {
-        // @ts-ignore
-        meter_id: this.id,
-        ...attributes
-      },
-      "meter_id",
-      "value",
-      "date"
-    )}`;
-  }
-
-  /**
    * Get values of the meter.
    * @param {any} context
    * @param {Object} [options]
    * @param {string} [options.gte] time of earliest value
    * @param {string} [options.lte] time of latest value
    * @param {boolean} [options.reverse] order
-   * @return {AsyncIterable<{value:number, date: Date}>}
+   * @return {AsyncIterable<Value>}
    */
   async *values(context, options) {
     // @ts-ignore
     for await (const row of context`SELECT date,value FROM values WHERE meter_id=${this.id}`.cursor()) {
-      yield row[0];
+      yield new PostgresValue({meter: this, ...row[0]})
     }
   }
 }

@@ -103,7 +103,11 @@ export class PostgresMaster extends Master {
     this.context = undefined;
   }
 
-  async *categories() {
+  /**
+   * 
+   * @param {any} context 
+   */
+  async *categories(context) {
     for await (const [row] of this
       .context`SELECT id,name,description FROM category`.cursor()) {
       yield new PostgresCategory(row);
