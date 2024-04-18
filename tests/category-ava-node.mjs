@@ -10,7 +10,7 @@ import { setSchema } from "../src/util.mjs";
 const SCHEMA = "konsum_test_1";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
-test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
+test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("Category constructor", t =>
   testCategoryConstructor(t, PostgresCategory, { fractional_digits: 2 })); // TODO defaults

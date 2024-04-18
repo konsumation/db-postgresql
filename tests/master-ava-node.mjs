@@ -8,7 +8,7 @@ import { setSchema } from "../src/util.mjs";
 const SCHEMA = "konsum_master_test";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
-test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
+test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("testRestoreUnsupportedVersion", async t =>
   testRestoreUnsupportedVersion(

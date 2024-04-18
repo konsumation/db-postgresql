@@ -14,7 +14,7 @@ import { setSchema } from "../src/util.mjs";
 const SCHEMA = "konsum_meter_test";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
-test.after(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
+test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
 test("Meter constructor", t =>
   testMeterConstructor(t, PostgresMeter, {
