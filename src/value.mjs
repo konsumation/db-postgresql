@@ -16,7 +16,7 @@ export class PostgresValue extends Value {
   }
 
   async write(sql) {
-    const values = this.getLocalAttributes();
+    const values = this.getLocalAttributes(this.constructor.attributeNameMapping);
     const names = Object.keys(values);
     return sql`INSERT INTO "values"${sql(values, ...names)}`;
   }

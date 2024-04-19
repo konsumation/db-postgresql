@@ -17,7 +17,7 @@ export class PostgresNote extends Note {
   }
 
   async write(sql) {
-    const values = this.getLocalAttributes();
+    const values = this.getLocalAttributes(this.constructor.attributeNameMapping);
     const names = Object.keys(values);
 
     // @ts-ignore
