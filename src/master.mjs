@@ -27,8 +27,7 @@ export class PostgresMaster extends Master {
 
   /**
    *
-   * @param {string} purl
-   * @param {string} [schema]
+   * @param {string} purl 
    * @returns {Promise<PostgresMaster>}
    */
   static async initialize(purl) {
