@@ -49,5 +49,4 @@ export function setDatabase(url, database) {
   } else {
     return url;
   }
-  //postgres://konsti:admin123@deVbox:5432/ci_db?jkjk
 }
