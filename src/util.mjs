@@ -1,4 +1,3 @@
-
 /**
  * Extract schema name from postgres url
  * @param {string} url
@@ -17,7 +16,7 @@ export function getSchema(url, schema) {
       }
     }
   }
-  url = url.replace(/\?.*$/, "")
+  url = url.replace(/\?.*$/, "");
   return { url, schema };
 }
 
@@ -35,4 +34,20 @@ export function setSchema(url, schema) {
   } else {
     return url;
   }
+}
+
+/**
+ * Set schema name to postgres url
+ * @param {string} url
+ * @param {string} [database]
+ * @returns {string?}
+ */
+export function setDatabase(url, database) {
+  if (database) {
+    let m = url.match(/(?<a>^.*\/)(?<e>\w+)(?<r>\?.*)?$/);
+    return `${m.groups.a}${database}${m.groups.r||""}`
+  } else {
+    return url;
+  }
+  //postgres://konsti:admin123@deVbox:5432/ci_db?jkjk
 }
