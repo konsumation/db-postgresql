@@ -3,8 +3,8 @@ import { Master } from "@konsumation/model";
 import { PostgresCategory } from "./category.mjs";
 import { PostgresMeter } from "./meter.mjs";
 import { PostgresNote } from "./note.mjs";
-import { getSchema } from "./util.mjs";
-export { PostgresMeter, PostgresNote, PostgresCategory };
+import { getSchema, setSchema, setDatabase } from "./util.mjs";
+export { PostgresMeter, PostgresNote, PostgresCategory, getSchema, setSchema, setDatabase };
 
 const VERSION = "1";
 
