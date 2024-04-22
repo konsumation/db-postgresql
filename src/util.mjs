@@ -2,7 +2,7 @@
  * Extract schema name from postgres url
  * @param {string} url
  * @param {string} [schema]
- * @returns {string?}
+ * @returns {Object}
  */
 export function getSchema(url, schema) {
   if (!schema) {
@@ -24,7 +24,7 @@ export function getSchema(url, schema) {
  * Set schema name to postgres url
  * @param {string} url
  * @param {string} [schema]
- * @returns {string?}
+ * @returns {string}
  */
 export function setSchema(url, schema) {
   //do we need any other options on url, if yes replace need to be modified like on getSchema
@@ -40,11 +40,11 @@ export function setSchema(url, schema) {
  * Set schema name to postgres url
  * @param {string} url
  * @param {string} [database]
- * @returns {string?}
+ * @returns {string}
  */
 export function setDatabase(url, database) {
   if (database) {
-    let m = url.match(/(?<a>^.*\/)(?<e>\w+)(?<r>\?.*)?$/);
+    const m = url.match(/(?<a>^.*\/)(?<e>\w+)(?<r>\?.*)?$/);
     return `${m.groups.a}${database}${m.groups.r||""}`
   } else {
     return url;

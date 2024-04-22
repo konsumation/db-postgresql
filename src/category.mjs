@@ -44,6 +44,7 @@ export class PostgresCategory extends Category {
   async write(sql) {
     //TODO check if columns are changed?
 
+    // @ts-ignore
     const values = this.getLocalAttributes(this.constructor.attributeNameMapping);
     const names = Object.keys(values);
 

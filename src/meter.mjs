@@ -34,7 +34,10 @@ export class PostgresMeter extends Meter {
   }
 
   async write(sql) {
-    const values = this.getLocalAttributes(this.constructor.attributeNameMapping);
+    const values = this.getLocalAttributes(
+      // @ts-ignore
+      this.constructor.attributeNameMapping
+    );
     const names = Object.keys(values);
 
     // @ts-ignore
@@ -80,7 +83,7 @@ export class PostgresMeter extends Meter {
   async *values(context, options) {
     // @ts-ignore
     for await (const row of context`SELECT date,value FROM values WHERE meter_id=${this.id}`.cursor()) {
-      yield new PostgresValue({meter: this, ...row[0]})
+      yield new PostgresValue({ meter: this, ...row[0] });
     }
   }
 }

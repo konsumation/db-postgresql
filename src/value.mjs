@@ -12,11 +12,18 @@ export class PostgresValue extends Value {
 
   primaryKeyExpression(sql) {
     // @ts-ignore
-    return sql({ meter_id: this.meter.id, date: this.date }, "meter_id", "date");
+    return sql(
+      { meter_id: this.meter.id, date: this.date },
+      "meter_id",
+      "date"
+    );
   }
 
   async write(sql) {
-    const values = this.getLocalAttributes(this.constructor.attributeNameMapping);
+    const values = this.getLocalAttributes(
+      // @ts-ignore
+      this.constructor.attributeNameMapping
+    );
     const names = Object.keys(values);
     return sql`INSERT INTO "values"${sql(values, ...names)}`;
   }
