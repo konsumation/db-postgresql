@@ -2,7 +2,8 @@ import test from "ava";
 import { PostgresMaster, PostgresCategory } from "@konsumation/db-postgresql";
 import {
   testCategoryConstructor,
-  testCreateCategories
+  testCreateCategories,
+  testWriteReadUpdateDeleteCategories
 } from "@konsumation/db-test";
 import { createSchema, dropSchema } from "./util.mjs";
 import { setSchema } from "../src/util.mjs";
@@ -15,7 +16,15 @@ test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 test("Category constructor", t =>
   testCategoryConstructor(t, PostgresCategory, { fractional_digits: 2 })); // TODO defaults
 
-test("Category write / read / update / delete", async t => {
+test("Category write / read / update / delete", async t =>
+  testWriteReadUpdateDeleteCategories(
+    t,
+    await PostgresMaster.initialize(
+      setSchema(process.env.POSTGRES_URL, SCHEMA)
+    )));
+
+
+test.skip("xCategory write / read / update / delete", async t => {
   const master = await PostgresMaster.initialize(
     setSchema(process.env.POSTGRES_URL, SCHEMA)
   );
