@@ -16,12 +16,12 @@ const SCHEMA = "konsum_meter_test";
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
-test("Meter constructor", t =>
+test.only("Meter constructor", t =>
   testMeterConstructor(t, PostgresMeter, {
     name: "M1",
     category: new PostgresCategory({ name: "CAT-1" }),
-  //  fractional_digits: 2,
-    validFrom: new Date(2)
+    fractionalDigits: 4,
+    validFrom: new Date(3600000)
   }));
 
 test("Meter add / delete / update", async t => {
