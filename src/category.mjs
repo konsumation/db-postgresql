@@ -71,7 +71,8 @@ export class PostgresCategory extends Category {
   async delete(sql) {
     // @ts-ignore
     if (this.id) {
-      return sql`DELETE FROM category WHERE ${this.primaryKeyExpression(sql)}`;
+      // TODO why does sql({ id: this.id }, "id") not work ?
+      return sql`DELETE FROM category WHERE id=${this.id}`;
     }
   }
 
