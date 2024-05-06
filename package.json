@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@konsumation/model": "^7.1.5",
-    "@types/node": "^20.12.8",
+    "@types/node": "^20.12.9",
     "postgres": "^3.4.4"
   },
   "devDependencies": {
