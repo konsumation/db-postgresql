@@ -67,7 +67,7 @@ export class PostgresMeter extends Meter {
   async delete(sql) {
     // @ts-ignore
     if (this.id) {
-      return sql`DELETE FROM meter WHERE ${this.primaryKeyExpression(sql)}`;
+      return sql`DELETE FROM meter WHERE id=${this.id}`; // TODO why does primaryKeyExpression not work
     }
   }
 
