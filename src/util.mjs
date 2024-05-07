@@ -45,8 +45,7 @@ export function setSchema(url, schema) {
 export function setDatabase(url, database) {
   if (database) {
     const m = url.match(/(?<a>^.*\/)(?<e>\w+)(?<r>\?.*)?$/);
-    return `${m.groups.a}${database}${m.groups.r||""}`
-  } else {
-    return url;
+    return `${m.groups.a}${database}${m.groups.r || ""}`;
   }
+  return url;
 }
