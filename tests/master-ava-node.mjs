@@ -5,7 +5,7 @@ import Master from "@konsumation/db-postgresql";
 import { createSchema, dropSchema } from "./util.mjs";
 import { setSchema } from "../src/util.mjs";
 
-const SCHEMA = "konsum_master_test";
+const SCHEMA = "test-konsum-master";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));

@@ -7,7 +7,7 @@ import {
 import { createSchema, dropSchema } from "./util.mjs";
 import { setSchema } from "../src/util.mjs";
 
-const SCHEMA = "konsum_test_1";
+const SCHEMA = "test-konsum-category";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));

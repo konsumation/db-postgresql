@@ -10,7 +10,7 @@ import { createSchema, dropSchema } from "./util.mjs";
 import { setSchema } from "../src/util.mjs";
 
 
-const SCHEMA = "konsum_note_test";
+const SCHEMA = "test-konsum-note";
 
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
