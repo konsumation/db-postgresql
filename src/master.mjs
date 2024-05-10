@@ -4,7 +4,14 @@ import { PostgresCategory } from "./category.mjs";
 import { PostgresMeter } from "./meter.mjs";
 import { PostgresNote } from "./note.mjs";
 import { getSchema, setSchema, setDatabase } from "./util.mjs";
-export { PostgresMeter, PostgresNote, PostgresCategory, getSchema, setSchema, setDatabase };
+export {
+  PostgresMeter,
+  PostgresNote,
+  PostgresCategory,
+  getSchema,
+  setSchema,
+  setDatabase
+};
 
 const VERSION = "1";
 
@@ -27,7 +34,7 @@ export class PostgresMaster extends Master {
 
   /**
    *
-   * @param {string} purl 
+   * @param {string} purl
    * @returns {Promise<PostgresMaster>}
    */
   static async initialize(purl) {
@@ -37,48 +44,63 @@ export class PostgresMaster extends Master {
       connection: { search_path: schema }
     });
 
-    let values;
-
     /**
      * get meta info like schema version
      */
 
-    try {
-      values = (
-        await context`SELECT version,description FROM info ORDER BY created`
-      )[0];
-    } catch (e) {
-      switch (e.code) {
-        // undefined_table https://www.postgresql.org/docs/current/errcodes-appendix.html
-        case "42P01":
-          {
-            try {
-              await context.file(
-                new URL("sql/schema.sql", import.meta.url).pathname
-              );
+    async function getInfo() {
+      try {
+        const info = (await context`SELECT * FROM info ORDER BY created`)[0];
+        return info;
+      } catch (e) {
+        switch (e.code) {
+          // undefined_table https://www.postgresql.org/docs/current/errcodes-appendix.html
+          case "42P01":
+            {
+              try {
+                await context.file(
+                  new URL("sql/schema.sql", import.meta.url).pathname
+                );
 
-              values = { version: VERSION };
+                const info = { version: VERSION };
 
-              // @ts-ignore
-              await context`INSERT INTO info ${context(
-                values,
-                Object.keys(values)
-              )}`;
-            } catch (e) {
-              console.error(e);
+                // @ts-ignore
+                await context`INSERT INTO info ${context(
+                  info,
+                  Object.keys(info)
+                )}`;
+
+                return info;
+              } catch (e) {
+                console.error(e);
+              }
             }
-          }
-          break;
-        default:
-          console.error(e);
+            break;
+          default:
+            console.error(e);
+        }
+
+        return {};
       }
     }
 
-    if (values?.version !== VERSION) {
-      throw new Error(`Unsupported schema version: ${values?.version}`);
+    let info = await getInfo();
+
+    if (info.version !== VERSION) {
+      if (info.version !== undefined) {
+        await context.file(
+          new URL(`sql/migrate-${info.version}-${VERSION}.sql`, import.meta.url)
+            .pathname
+        );
+
+        info = await getInfo();
+      }
+      if (info.version !== VERSION) {
+        throw new Error(`Unsupported schema version: ${info.version}`);
+      }
     }
 
-    return new PostgresMaster(values, context);
+    return new PostgresMaster(info, context);
   }
 
   constructor(values, context) {
@@ -103,12 +125,11 @@ export class PostgresMaster extends Master {
   }
 
   /**
-   * 
-   * @param {any} context 
+   *
+   * @param {any} context
    */
   async *categories(context) {
-    for await (const [row] of this
-      .context`SELECT * FROM category`.cursor()) {
+    for await (const [row] of this.context`SELECT * FROM category`.cursor()) {
       yield new PostgresCategory(row);
     }
   }
