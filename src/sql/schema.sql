@@ -9,6 +9,10 @@ CREATE TABLE category (
     last_modified TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
+COMMENT ON COLUMN category.unit IS 'physical unit like kWh or m3';
+
+COMMENT ON COLUMN category.fractional_digits IS 'display precission';
+
 CREATE TABLE meter (
     id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
