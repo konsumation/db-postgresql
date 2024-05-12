@@ -87,8 +87,6 @@ export class PostgresCategory extends Category {
     }
   }
 
-  async deleteMeter(sql) {}
-
   /**
    * Get Meters of the category.
    * @param {any} sql
