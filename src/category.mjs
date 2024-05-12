@@ -59,7 +59,6 @@ export class PostgresCategory extends Category {
     } else {
       const result = await sql`SELECT * FROM category where name=${this.name}`;
       if (result?.length >= 1) {
-        console.log(result);
         Object.assign(this, result[0]);
       } else {
         Object.assign(
