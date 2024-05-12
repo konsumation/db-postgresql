@@ -15,13 +15,13 @@ test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 test("Category constructor", t =>
   testCategoryConstructor(t, PostgresCategory, { fractionalDigits: 3 }));
 
-test("Category write / read / update / delete", async t =>
+test.serial("Category write / read / update / delete", async t =>
   testWriteReadUpdateDeleteCategories(
     t,
     await PostgresMaster.initialize(setSchema(process.env.POSTGRES_URL, SCHEMA))
   ));
 
-test("Category write same name", async t => {
+test.serial("Category write same name", async t => {
   const master = await PostgresMaster.initialize(
     setSchema(process.env.POSTGRES_URL, SCHEMA)
   );
@@ -34,6 +34,7 @@ test("Category write same name", async t => {
   await cat1b.write(context);
 
   t.is(cat1a.id, cat1b.id);
+  //t.deepEqual(cat1a, cat1b);
 
   await master.close();
 });
