@@ -82,7 +82,7 @@ export class PostgresMeter extends Meter {
    */
   async *values(context, options) {
     // @ts-ignore
-    for await (const row of context`SELECT date,value FROM values WHERE meter_id=${this.id}`.cursor()) {
+    for await (const row of context`SELECT * FROM values WHERE meter_id=${this.id}`.cursor()) {
       yield new PostgresValue({ meter: this, ...row[0] });
     }
   }
