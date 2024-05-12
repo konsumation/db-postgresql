@@ -45,7 +45,9 @@ export class PostgresCategory extends Category {
     //TODO check if columns are changed?
 
     // @ts-ignore
-    const values = this.getLocalAttributes(this.constructor.attributeNameMapping);
+    const values = this.getLocalAttributes(
+      this.constructor.attributeNameMapping
+    );
     const names = Object.keys(values);
 
     // @ts-ignore
@@ -55,12 +57,21 @@ export class PostgresCategory extends Category {
         ...names
       )} WHERE ${this.primaryKeyExpression(sql)}`;
     } else {
-      Object.assign(
-        this,
-        (
-          await sql`INSERT INTO category ${sql(values, ...names)} RETURNING id`
-        )[0]
-      );
+      const result = await sql`SELECT * FROM category where name=${this.name}`;
+      if (result?.length >= 1) {
+        console.log(result);
+        Object.assign(this, result[0]);
+      } else {
+        Object.assign(
+          this,
+          (
+            await sql`INSERT INTO category ${sql(
+              values,
+              ...names
+            )} RETURNING id`
+          )[0]
+        );
+      }
     }
   }
 
