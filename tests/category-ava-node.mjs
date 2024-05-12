@@ -21,7 +21,7 @@ test("Category write / read / update / delete", async t =>
     await PostgresMaster.initialize(setSchema(process.env.POSTGRES_URL, SCHEMA))
   ));
 
-test.only("Category write same name", async t => {
+test("Category write same name", async t => {
   const master = await PostgresMaster.initialize(
     setSchema(process.env.POSTGRES_URL, SCHEMA)
   );
