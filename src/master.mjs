@@ -40,8 +40,10 @@ export class PostgresMaster extends Master {
   static async initialize(purl) {
     const { schema, url } = getSchema(purl);
     const context = postgres(url, {
-      //client_min_messages: 'ERROR',
-      connection: { search_path: schema }
+      connection: { 
+        search_path: schema,
+        client_min_messages: 'ERROR' // TODO why does this not work ?
+      }
     });
 
     /**
