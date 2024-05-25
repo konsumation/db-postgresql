@@ -28,6 +28,7 @@ export class PostgresValue extends Value {
     return sql`INSERT INTO "values"${sql(values, ...names)}`;
   }
 
+  //TODO check how to use this.primaryKeyExpression in where clause
   async delete(sql) {
     const values = this.getLocalAttributes(
       // @ts-ignore
@@ -36,4 +37,6 @@ export class PostgresValue extends Value {
     const names = Object.keys(values);
     return sql`delete from values where meter_id = ${this.meter.id} and date = ${this.date}`;
   }
+
+  //TODO update? do we need?
 }
