@@ -42,8 +42,8 @@ test("Value insert / delete / update", async (t) => {
   t.true(meter.id > 0);
 
   const today = new Date();
-  const val3 = { date: today.setDate(today.getDate() - 1), value: 333 };
-  const val2 = { date: today.setDate(today.getDate() - 1), value: 222 };
+  const val3 = { date: new Date().setDate(today.getDate() - 2), value: 333 };
+  const val2 = { date: new Date().setDate(today.getDate() - 1), value: 222 };
   const val1 = { date: today, value: 111 };
   
   const v1 = meter.addValue(context, val1);
