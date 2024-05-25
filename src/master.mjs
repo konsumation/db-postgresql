@@ -3,11 +3,13 @@ import { Master } from "@konsumation/model";
 import { PostgresCategory } from "./category.mjs";
 import { PostgresMeter } from "./meter.mjs";
 import { PostgresNote } from "./note.mjs";
+import { PostgresValue } from "./value.mjs";
 import { getSchema, setSchema, setDatabase } from "./util.mjs";
 export {
   PostgresMeter,
   PostgresNote,
   PostgresCategory,
+  PostgresValue,
   getSchema,
   setSchema,
   setDatabase
