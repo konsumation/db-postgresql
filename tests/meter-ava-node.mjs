@@ -16,7 +16,7 @@ const SCHEMA = "test-konsum-meter";
 test.before(async t => createSchema(process.env.POSTGRES_URL, SCHEMA));
 test.after.always(async t => dropSchema(process.env.POSTGRES_URL, SCHEMA));
 
-test.only("Meter constructor", t =>
+test("Meter constructor", t =>
   testMeterConstructor(t, PostgresMeter, {
     name: "M1",
     category: new PostgresCategory({ name: "CAT-1" }),
