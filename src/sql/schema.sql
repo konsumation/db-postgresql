@@ -43,7 +43,7 @@ values
 CREATE TABLE note (
     id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
-    meter_id INT NOT NULL REFERENCES meter (id),
+    meter_id INT NOT NULL REFERENCES meter (id) ON DELETE CASCADE,
     description VARCHAR(80)
 );
 

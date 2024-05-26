@@ -2,7 +2,8 @@ import test from "ava";
 import {
   PostgresMaster,
   PostgresCategory,
-  PostgresMeter
+  PostgresMeter,
+  PostgresNote
 } from "@konsumation/db-postgresql";
 import {
   testMeterConstructor,
@@ -47,6 +48,14 @@ test("delete category cascade with meter and values", async t => {
   await testInsertListValues(t, master, meter, [
     { date: new Date(), value: 234 }
   ]);
+
+  const note = new PostgresNote({
+    meter,
+    name: new Date().toISOString(),
+    description: "note for meter M1"
+  });
+
+  await note.write(master.context);
 
   await category.delete(master.context)
 
