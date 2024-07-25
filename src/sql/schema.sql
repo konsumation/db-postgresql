@@ -21,6 +21,7 @@ CREATE TABLE meter (
     description VARCHAR(80),
     unit VARCHAR(10),
     fractional_digits INT,
+    aggregating BOOLEAN DEFAULT true,
     valid_from TIMESTAMP,
     created TIMESTAMP NOT NULL DEFAULT current_timestamp,
     last_modified TIMESTAMP NOT NULL DEFAULT current_timestamp,

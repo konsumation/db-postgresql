@@ -17,6 +17,7 @@ export class PostgresMeter extends Meter {
     return {
       fractionalDigits: "fractional_digits",
       validFrom: "valid_from",
+      isAggregating: "aggregating",
       "category.id": "category_id"
     };
   }
