@@ -74,6 +74,7 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - name: release
+        name: release
         run: npx semantic-release
         env:
           CI: "true"
