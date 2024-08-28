@@ -44,7 +44,7 @@
     "execa": "^9.3.1",
     "semantic-release": "^24.0.0",
     "typescript": "^5.4.5",
-    "@types/node": "^22.5.0"
+    "@types/node": "^22.5.1"
   },
   "repository": {
     "type": "git",
