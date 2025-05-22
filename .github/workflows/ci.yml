@@ -16,7 +16,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 20.15.0
+          - 22.16.0
+          - 24.1.0
     env:
       POSTGRES_URL: postgresql://postgres:postgres@localhost:5432/ci_db_test
       POSTGRES_USER: postgres
@@ -45,6 +46,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: install
+        run: npm ci
       - name: test and coverage
         run: npm run cover --if-present
       - name: coveralls
@@ -70,9 +73,11 @@ jobs:
       - name: prepare node
         uses: actions/setup-node@v4.4.0
         with:
-          node-version: 20.15.0
+          node-version: 22.16.0
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: install
+        run: npm ci
       - name: release
         run: npx semantic-release
         env:
