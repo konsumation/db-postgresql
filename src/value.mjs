@@ -35,7 +35,7 @@ export class PostgresValue extends Value {
       this.constructor.attributeNameMapping
     );
     const names = Object.keys(values);
-    return sql`delete from values where meter_id = ${this.meter.id} and date = ${this.date}`;
+    return sql`DELETE FROM values WHERE meter_id = ${this.meter.id} AND date = ${this.date}`;
   }
 
   //TODO update? do we need?

@@ -57,7 +57,7 @@ export class PostgresCategory extends Category {
         ...names
       )} WHERE ${this.primaryKeyExpression(sql)}`;
     } else {
-      const result = await sql`SELECT * FROM category where name=${this.name}`;
+      const result = await sql`SELECT * FROM category WHERE name=${this.name}`;
       if (result?.length >= 1) {
         Object.assign(this, result[0]);
       } else {
@@ -114,7 +114,7 @@ export class PostgresCategory extends Category {
   */
 
   static async entry(sql, name) {
-    const result = await sql`select * from category where name=${name}`;
+    const result = await sql`SELECT * FROM category WHERE name=${name}`;
     return new this({ name, ...result[0] });
   }
 }
